@@ -22,4 +22,8 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+$string['extracttermcode'] = 'Term code';
+$string['extracttermcode_desc'] = 'Used to populate [TERMCODE]. Derived from course idnumber.';
 $string['pluginname'] = 'Use template on course creation';
+$string['templatenameformat'] = 'Template shortname format';
+$string['templatenameformat_desc'] = 'Expected shortname format for template courses';

@@ -30,8 +30,13 @@ class local_course_template_helper {
     public static function template_course($courseid) {
         global $CFG;
 
+        $templatecourseid = self::find_term_template($courseid);
+        if ($templatecourseid == false) {
+            return;
+        }
+
         $bc = new backup_controller(
-            backup::TYPE_1COURSE, 9, backup::FORMAT_MOODLE, backup::INTERACTIVE_NO, backup::MODE_SAMESITE, 2);
+            backup::TYPE_1COURSE, $templatecourseid, backup::FORMAT_MOODLE, backup::INTERACTIVE_NO, backup::MODE_SAMESITE, 2);
         $bc->execute_plan();
         $backupfile = $bc->get_results();
         $packer = new mbz_packer();
@@ -39,7 +44,7 @@ class local_course_template_helper {
         $backupfile['backup_destination']->extract_to_pathname($packer, "$CFG->tempdir/backup/9");
         $bc->destroy();
         $restore = new restore_controller(
-                9, $courseid, backup::INTERACTIVE_NO, backup::MODE_SAMESITE, 2, backup::TARGET_EXISTING_ADDING);
+                $templatecourseid, $courseid, backup::INTERACTIVE_NO, backup::MODE_SAMESITE, 2, backup::TARGET_EXISTING_ADDING);
         self::apply_defaults($restore);
         if (!$restore->execute_precheck('true')) {
             return false;
@@ -47,6 +52,28 @@ class local_course_template_helper {
         $restore->execute_plan();
         $restore->destroy();
         self::prune_news_forums($courseid);
+    }
+
+    protected static function find_term_template($courseid) {
+        global $DB;
+        $course = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
+        $pattern = get_config('local_course_template', 'extracttermcode');
+        $subject = $course->idnumber;
+        preg_match($pattern, $subject, $matches);
+        if (!empty($matches) && count($matches) >= 2) {
+            $templateshortname = str_replace('[TERMCODE]', $matches[1],
+                get_config('local_course_template', 'templatenameformat'));
+            $templatecourse = $DB->get_record('course', array('shortname' => $templateshortname));
+            if (empty($templatecourse)) {
+                // No template found.
+                return false;
+            } else {
+                return $templatecourse->id;
+            }
+        } else {
+            // This course doesn't conform to the given naming convention, so skip.
+            return false;
+        }
     }
 
     protected static function prune_news_forums($courseid) {

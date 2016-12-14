@@ -30,19 +30,44 @@ class local_course_template_backup {
     public static function create_backup($courseid) {
         global $CFG;
 
-        // Instantiate controller.
-        $bc = new backup_controller(
-            \backup::TYPE_1COURSE, $courseid, backup::FORMAT_MOODLE, backup::INTERACTIVE_NO, backup::MODE_GENERAL, 2);
+        // Try to find the backup.
+        $cache = cache::make('local_course_template', 'backups');
+        $storedfile = $cache->get($courseid);
+        if ($storedfile == false) {
 
-        // Run the backup.
-        $bc->set_status(backup::STATUS_AWAITING);
-        $bc->execute_plan();
-        $result = $bc->get_results();
+            // Instantiate controller.
+            $bc = new backup_controller(
+                \backup::TYPE_1COURSE, $courseid, backup::FORMAT_MOODLE, backup::INTERACTIVE_NO, backup::MODE_GENERAL, 2);
+
+            // Run the backup.
+            $bc->set_status(backup::STATUS_AWAITING);
+            $bc->execute_plan();
+            $result = $bc->get_results();
+            $bc->destroy();
+
+            // Store the backup.
+            $file = $result['backup_destination'];
+            $context = context_course::instance($courseid);
+            $timestamp = time();
+            $fs = get_file_storage();
+            $filerecord = array(
+                'contextid' => $context->id,
+                'component' => 'local_course_template',
+                'filearea' => 'backup',
+                'itemid' => $timestamp,
+                'filepath' => '/',
+                'filename' => 'template_backup.mbz',
+                'timecreated' => $timestamp,
+                'timemodified' => $timestamp
+            );
+            $storedfile = $fs->create_file_from_storedfile($filerecord, $file);
+            $file->delete();
+            $cache->set($courseid, $storedfile);
+        }
 
         // Extract the backup.
         $packer = new mbz_packer();
-        $result['backup_destination']->extract_to_pathname($packer, "$CFG->tempdir/backup/9");
-        $bc->destroy();
+        $storedfile->extract_to_pathname($packer, "$CFG->tempdir/backup/$courseid");
         return $courseid;
     }
 

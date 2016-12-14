@@ -23,9 +23,6 @@
  */
 defined('MOODLE_INTERNAL') || die();
 
-require_once($CFG->dirroot . '/backup/util/includes/backup_includes.php');
-require_once($CFG->dirroot . '/backup/util/includes/restore_includes.php');
-
 class local_course_template_helper {
     public static function template_course($courseid) {
         global $CFG;
@@ -35,23 +32,21 @@ class local_course_template_helper {
             return;
         }
 
-        $bc = new backup_controller(
-            backup::TYPE_1COURSE, $templatecourseid, backup::FORMAT_MOODLE, backup::INTERACTIVE_NO, backup::MODE_SAMESITE, 2);
-        $bc->execute_plan();
-        $backupfile = $bc->get_results();
-        $packer = new mbz_packer();
-
-        $backupfile['backup_destination']->extract_to_pathname($packer, "$CFG->tempdir/backup/9");
-        $bc->destroy();
-        $restore = new restore_controller(
-                $templatecourseid, $courseid, backup::INTERACTIVE_NO, backup::MODE_SAMESITE, 2, backup::TARGET_EXISTING_ADDING);
-        self::apply_defaults($restore);
-        if (!$restore->execute_precheck('true')) {
+        // Create and extract template backup file.
+        $backupid = \local_course_template_backup::create_backup($templatecourseid);
+        if (!$backupid) {
             return false;
         }
-        $restore->execute_plan();
-        $restore->destroy();
+
+        // Restore the backup.
+        $status = \local_course_template_backup::restore_backup($backupid, $courseid);
+        if (!$status) {
+            return false;
+        }
+
+        // Cleanup potential news forum duplication.
         self::prune_news_forums($courseid);
+        return true;
     }
 
     protected static function find_term_template($courseid) {
@@ -103,33 +98,6 @@ class local_course_template_helper {
         array_shift($newsforums);
         foreach ($newsforums as $forum) {
             forum_delete_instance($forum->id);
-        }
-    }
-
-    protected static function apply_defaults($rc) {
-        $settings = array(
-            'enrol_migratetomanual' => 0,
-            'users' => 0,
-            'user_files' => 0,
-            'role_assignments' => 0,
-            'activities' => 1,
-            'blocks' => 1,
-            'filters' => 1,
-            'comments' => 0,
-            'userscompletion' => 0,
-            'logs' => 0,
-            'grade_histories' => 0,
-            'keep_roles_and_enrolments' => 0,
-            'keep_groups_and_groupings' => 0,
-            'overwrite_conf' => 0
-        );
-        foreach ($settings as $name => $value) {
-            if ($rc->get_plan()->setting_exists($name)) {
-                $setting = $rc->get_plan()->get_setting($name);
-                if ($setting->get_status() == backup_setting::NOT_LOCKED) {
-                    $setting->set_value($value);
-                }
-            }
         }
     }
 }

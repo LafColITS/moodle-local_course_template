@@ -31,8 +31,9 @@ class local_course_template_backup {
         global $CFG;
 
         // Try to find the backup.
+        $context = context_course::instance($courseid);
         $cache = cache::make('local_course_template', 'backups');
-        $storedfile = $cache->get($courseid);
+        $storedfile = $cache->get($context->id);
         if ($storedfile == false) {
 
             // Instantiate controller.
@@ -62,7 +63,7 @@ class local_course_template_backup {
             );
             $storedfile = $fs->create_file_from_storedfile($filerecord, $file);
             $file->delete();
-            $cache->set($courseid, $storedfile);
+            $cache->set($context->id, $storedfile);
         }
 
         // Extract the backup.

@@ -23,6 +23,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 $string['cachedef_templates'] = 'Course template course ids';
+$string['cleanuptask'] = 'Cleanup course template backups';
 $string['extracttermcode'] = 'Term code';
 $string['extracttermcode_desc'] = 'Used to populate [TERMCODE]. Derived from course idnumber.';
 $string['pluginname'] = 'Use template on course creation';

@@ -22,9 +22,8 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$string['cachedef_templates'] = 'Course template course ids';
-$string['extracttermcode'] = 'Term code';
-$string['extracttermcode_desc'] = 'Used to populate [TERMCODE]. Derived from course idnumber.';
-$string['pluginname'] = 'Use template on course creation';
-$string['templatenameformat'] = 'Template shortname format';
-$string['templatenameformat_desc'] = 'Expected shortname format for template courses';
+$definitions = array(
+    'templates' => array(
+        'mode' => cache_store::MODE_APPLICATION
+    )
+);

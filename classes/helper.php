@@ -69,12 +69,21 @@ class local_course_template_helper {
         if (!empty($matches) && count($matches) >= 2) {
             $templateshortname = str_replace('[TERMCODE]', $matches[1],
                 get_config('local_course_template', 'templatenameformat'));
-            $templatecourse = $DB->get_record('course', array('shortname' => $templateshortname));
-            if (empty($templatecourse)) {
-                // No template found.
-                return false;
+
+            // Check if the idnumber is cached.
+            $cache = cache::make('local_course_template', 'templates');
+            $templatecourseid = $cache->get($templateshortname);
+            if ($templatecourseid == false) {
+                $templatecourse = $DB->get_record('course', array('shortname' => $templateshortname));
+                if (empty($templatecourse)) {
+                    // No template found.
+                    return false;
+                } else {
+                    $cache->set($templateshortname, $templatecourse->id);
+                    return $templatecourse->id;
+                }
             } else {
-                return $templatecourse->id;
+                return $templatecourseid;
             }
         } else {
             // This course doesn't conform to the given naming convention, so skip.

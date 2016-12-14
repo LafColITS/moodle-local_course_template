@@ -56,8 +56,14 @@ class local_course_template_helper {
 
     protected static function find_term_template($courseid) {
         global $DB;
-        $course = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
+
+        // Don't continue if there's no pattern.
         $pattern = get_config('local_course_template', 'extracttermcode');
+        if (empty($pattern)) {
+            return false;
+        }
+
+        $course = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
         $subject = $course->idnumber;
         preg_match($pattern, $subject, $matches);
         if (!empty($matches) && count($matches) >= 2) {

@@ -73,8 +73,9 @@ class local_course_template_backup {
     }
 
     public static function restore_backup($templateid, $courseid) {
+        $admin = get_admin();
         $rc = new restore_controller(
-            $templateid, $courseid, backup::INTERACTIVE_NO, backup::MODE_SAMESITE, 2, backup::TARGET_EXISTING_ADDING);
+            $templateid, $courseid, backup::INTERACTIVE_NO, backup::MODE_SAMESITE, $admin->id, backup::TARGET_EXISTING_ADDING);
         self::apply_defaults($rc);
         if (!$rc->execute_precheck(true)) {
             return false;

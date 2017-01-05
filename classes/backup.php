@@ -84,6 +84,9 @@ class local_course_template_backup {
         return true;
     }
 
+    /**
+     * @copyright 2011 Louisiana State University
+     */
     protected static function apply_defaults($rc) {
         $settings = array(
             'enrol_migratetomanual' => 0,

@@ -19,6 +19,8 @@ By default the plugin will search for a course with the short name `Template-[TE
 
 The plugin listens on the `\core\event\course_created` event and fires immediately on course creation. Once you've given a course the necessary short name you don't need to do anything further. The plugin will create a backup of the template course and import it into the new course.
 
+You should consider overriding Moodle's default block settings in config.php: `$CFG->defaultblocks_override = '';`. Otherwise you will get two sets of blocks on course creation. Manually configure the blocks in the template course instead. 
+
 ## Acknowledgements
 
 This plugin was inspired by the course enrollment/templating plugin in use at Wesleyan University. The restoration controller settings are derived from LSU's [Simplified Restore block](https://github.com/lsuits/simple_restore).

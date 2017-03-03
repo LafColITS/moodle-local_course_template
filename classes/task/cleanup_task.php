@@ -31,7 +31,7 @@ class cleanup_task extends \core\task\scheduled_task {
         global $DB;
 
         // Find and prune template backups.
-        $cache = cache::make('local_course_template', 'backups');
+        $cache = \cache::make('local_course_template', 'backups');
         $backups = $DB->get_records('files', array('component' => 'local_course_template', 'filearea' => 'backup'));
         $fs = get_file_storage();
         foreach ($backups as $record) {

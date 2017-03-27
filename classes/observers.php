@@ -29,6 +29,12 @@ class observers {
         if (empty($event->objectid)) {
             return;
         }
-        \local_course_template_helper::template_course($event->objectid);
+        $lockfactory = \core\lock\lock_config::get_lock_factory('local_course_template_course_created');
+        $lockkey = "course{$event->objectid}";
+        $lock = $lockfactory->get_lock($lockkey, 0);
+        if ($lock !== false) {
+            \local_course_template_helper::template_course($event->objectid);
+            $lock->release();
+        }
     }
 }

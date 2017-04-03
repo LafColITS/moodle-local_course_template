@@ -73,5 +73,17 @@ class local_course_template_template_courses_testcase extends advanced_testcase 
 
         $this->assertEquals(2, $DB->count_records('label'));
         $this->assertEquals(2, $DB->count_records('assign'));
+
+        // Bulk course creation.
+        $category1 = $this->getDataGenerator()->create_category();
+        for ($categoryid = 2; $categoryid <= 20; $categoryid++) {
+            $category = $this->getDataGenerator()->create_category(array('parent' => $category1->id));
+            for ($course = 1; $course <= 10; $course++) {
+                $coursenum = ($categoryid * 10) + $course;
+                $this->getDataGenerator()->create_course(array('category' => $category->id, 'idnumber' => str_pad($coursenum, 5, '0', STR_PAD_LEFT). '.201610'));
+            }
+        }
+        $this->assertEquals(192, $DB->count_records('label'));
+        $this->assertEquals(2, $DB->count_records('assign'));
     }
 }

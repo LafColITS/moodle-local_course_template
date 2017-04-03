@@ -35,7 +35,7 @@ class local_course_template_backup {
         $context = context_course::instance($courseid);
         $cache = cache::make('local_course_template', 'backups');
         $storedfile = $cache->get($context->id);
-        if ($storedfile == false) {
+        if ($storedfile === false) {
 
             // Instantiate controller.
             $bc = new backup_controller(

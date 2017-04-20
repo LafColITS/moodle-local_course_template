@@ -20,7 +20,20 @@ The administrator will need to define a regular expression for extracting the te
 
 The plugin listens on the `\core\event\course_created` event and fires immediately on course creation. Once you've given a course the necessary short name you don't need to do anything further. The plugin will create a backup of the template course and import it into the new course.
 
-You should consider overriding Moodle's default block settings in config.php: `$CFG->defaultblocks_override = '';`. Otherwise you will get two sets of blocks on course creation. Manually configure the blocks in the template course instead. 
+You should consider overriding Moodle's default block settings in config.php: `$CFG->defaultblocks_override = '';`. Otherwise you will get two sets of blocks on course creation. Manually configure the blocks in the template course instead.
+
+### Sample regular expressions
+
+The basic use case above, `/[0-9]+\.([0-9]+)/`, would return `YYYYYY` from the following idnumbers:
+
+- `9999.201610`
+- `3781.201730`
+
+A more complicated example, `/[A-Za-z0-9\.]+([0-9]{6})/`, would capture the following:
+
+- `4422.201610`
+- `7866a.201730`
+- `XLSB7201610`
 
 ## Acknowledgements
 

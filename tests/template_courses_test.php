@@ -29,7 +29,7 @@ class local_course_template_template_courses_testcase extends advanced_testcase 
         $this->resetAfterTest(true);
 
         // Configure the plugin.
-        set_config('extracttermcode', '/[0-9]+\.([0-9]+)/', 'local_course_template');
+        set_config('extracttermcode', '/[A-Za-z0-9\.]+([0-9]{6})/', 'local_course_template');
         set_config('templatenameformat', 'Template-[TERMCODE]', 'local_course_template');
 
         // Create the template course.
@@ -85,5 +85,14 @@ class local_course_template_template_courses_testcase extends advanced_testcase 
         }
         $this->assertEquals(192, $DB->count_records('label'));
         $this->assertEquals(2, $DB->count_records('assign'));
+
+        $c4 = $this->getDataGenerator()->create_course(
+            array(
+                'idnumber' => 'XLSB7201610'
+            )
+        );
+        $this->assertEquals(193, $DB->count_records('label'));
+        $this->assertEquals(2, $DB->count_records('assign'));
+
     }
 }

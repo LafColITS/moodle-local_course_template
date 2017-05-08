@@ -14,9 +14,9 @@ Copy the course_template folder into your /local directory and visit your Admin 
 
 ## Usage
 
-The administrator will need to define a regular expression for extracting the term code from the course idnumber. This will be used to identify which course template (if any) should be used on creation. For example, if your courses have idnumbers in the format `XXXXXX.YYYYYY`, where `YYYYYY` is the termcode, then the regular expression `/[0-9]+\.([0-9]+)/` will return `YYYYYY`.
+The administrator will need to create a "template" course which contains the desired blocks and resources. This course will need a specially-named short name. By default the plugin will search for a course with the short name `Template-[TERMCODE]`, where `[TERMCODE]` is the matching value for `YYYYYY`. For example, if a course had the termcode `201610`, the module would search for a course with the short name `Template-201610`.
 
-By default the plugin will search for a course with the short name `Template-[TERMCODE]`, where `[TERMCODE]` is the matching value for `YYYYYY`. For example, if a course had the termcode `201610`, the module would search for a course with the short name `Template-201610`.
+The administrator will need to define a regular expression for extracting the term code from the course idnumber. This will be used to identify which course template (if any) should be used on creation. For example, if your courses have idnumbers in the format `XXXXXX.YYYYYY`, where `YYYYYY` is the termcode, then the regular expression `/[0-9]+\.([0-9]+)/` will return `YYYYYY`.
 
 The plugin listens on the `\core\event\course_created` event and fires immediately on course creation. Once you've given a course the necessary short name you don't need to do anything further. The plugin will create a backup of the template course and import it into the new course.
 

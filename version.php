@@ -16,8 +16,8 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2017030300;
+$plugin->version   = 2017050900;
 $plugin->requires  = 2016052300;
 $plugin->component = 'local_course_template';
 $plugin->maturity  = MATURITY_BETA;
-$plugin->release   = 'v0.1.0';
+$plugin->release   = 'v0.2.0';

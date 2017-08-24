@@ -97,7 +97,8 @@ class local_course_template_helper {
         }
         array_shift($newsforums);
         foreach ($newsforums as $forum) {
-            forum_delete_instance($forum->id);
+            $cm = get_coursemodule_from_instance('forum', $forum->id);
+            course_delete_module($cm->id);
         }
     }
 }

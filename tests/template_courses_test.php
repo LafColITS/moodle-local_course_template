@@ -50,6 +50,10 @@ class local_course_template_template_courses_testcase extends advanced_testcase 
         );
         $activity = $this->getDataGenerator()->create_module('assign',
             array('course' => $tc2->id));
+        $this->getDataGenerator()->create_module('forum',
+            array('course' => $tc2->id, 'type' => 'news'));
+        $this->getDataGenerator()->create_module('forum',
+            array('course' => $tc2->id, 'type' => 'news'));
 
         $c1 = $this->getDataGenerator()->create_course(
             array(
@@ -68,6 +72,10 @@ class local_course_template_template_courses_testcase extends advanced_testcase 
 
         $this->assertEquals(2, $DB->count_records('label'));
         $this->assertEquals(2, $DB->count_records('assign'));
+
+        // Ensure second news forum is deleted.
+        $this->assertEquals(1, $DB->count_records('forum', array('course' => $c2->id)));
+        $this->assertEquals(2, $DB->count_records('course_modules', array('course' => $c2->id)));
 
         $c3 = $this->getDataGenerator()->create_course();
 

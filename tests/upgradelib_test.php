@@ -33,10 +33,10 @@ class local_course_template_upgradelib_testcase extends advanced_testcase {
         // Create three courses.
         $c1 = $this->getDataGenerator()->create_course();
         $c2 = $this->getDataGenerator()->create_course();
-        $c3 = $this->getDataGenerator()->create_course();
+        $this->getDataGenerator()->create_course();
 
         // Add a news forum to each.
-        $f1 = $this->getDataGenerator()->create_module('forum',
+        $this->getDataGenerator()->create_module('forum',
             array('course' => $c1->id, 'type' => 'news'));
         $f2 = $this->getDataGenerator()->create_module('forum',
             array('course' => $c2->id, 'type' => 'news'));

@@ -55,7 +55,8 @@ class local_course_template_template_courses_testcase extends advanced_testcase 
         $this->getDataGenerator()->create_module('forum',
             array('course' => $tc2->id, 'type' => 'news'));
 
-        $c1 = $this->getDataGenerator()->create_course(
+        // Course matching 201610 template.
+        $this->getDataGenerator()->create_course(
             array(
                 'idnumber' => '1000.201610'
             )
@@ -64,6 +65,7 @@ class local_course_template_template_courses_testcase extends advanced_testcase 
         $this->assertEquals(2, $DB->count_records('label'));
         $this->assertEquals(1, $DB->count_records('assign'));
 
+        // Course matching 201620 template.
         $c2 = $this->getDataGenerator()->create_course(
             array(
                 'idnumber' => '1000.201620'
@@ -77,7 +79,8 @@ class local_course_template_template_courses_testcase extends advanced_testcase 
         $this->assertEquals(1, $DB->count_records('forum', array('course' => $c2->id)));
         $this->assertEquals(2, $DB->count_records('course_modules', array('course' => $c2->id)));
 
-        $c3 = $this->getDataGenerator()->create_course();
+        // Course with no template.
+        $this->getDataGenerator()->create_course();
 
         $this->assertEquals(2, $DB->count_records('label'));
         $this->assertEquals(2, $DB->count_records('assign'));
@@ -88,13 +91,15 @@ class local_course_template_template_courses_testcase extends advanced_testcase 
             $category = $this->getDataGenerator()->create_category(array('parent' => $category1->id));
             for ($course = 1; $course <= 10; $course++) {
                 $coursenum = ($categoryid * 10) + $course;
-                $this->getDataGenerator()->create_course(array('category' => $category->id, 'idnumber' => str_pad($coursenum, 5, '0', STR_PAD_LEFT). '.201610'));
+                $this->getDataGenerator()->create_course(array(
+                    'category' => $category->id, 'idnumber' => str_pad($coursenum, 5, '0', STR_PAD_LEFT). '.201610'));
             }
         }
         $this->assertEquals(192, $DB->count_records('label'));
         $this->assertEquals(2, $DB->count_records('assign'));
 
-        $c4 = $this->getDataGenerator()->create_course(
+        // Course matching 201610 template.
+        $this->getDataGenerator()->create_course(
             array(
                 'idnumber' => 'XLSB7201610'
             )

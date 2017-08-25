@@ -25,7 +25,6 @@ defined('MOODLE_INTERNAL') || die();
 
 class local_course_template_helper {
     public static function template_course($courseid) {
-        global $CFG;
 
         $templatecourseid = self::find_term_template($courseid);
         if ($templatecourseid == false) {
@@ -49,6 +48,11 @@ class local_course_template_helper {
         return true;
     }
 
+    /**
+     * Locate the term template for the course.
+     * @param int $courseid The course.
+     * @return int, or false on failure
+     */
     protected static function find_term_template($courseid) {
         global $DB;
 
@@ -86,6 +90,10 @@ class local_course_template_helper {
         }
     }
 
+    /**
+     * Remove news forums created by the template.
+     * @param int $courseid the course
+     */
     protected static function prune_news_forums($courseid) {
         global $CFG, $DB;
         require_once($CFG->dirroot . "/mod/forum/lib.php");

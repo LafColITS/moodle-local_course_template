@@ -22,6 +22,8 @@
 
 namespace local_course_template\task;
 
+defined('MOODLE_INTERNAL') || die();
+
 class cleanup_task extends \core\task\scheduled_task {
     public function get_name() {
         return get_string('cleanuptask', 'local_course_template');

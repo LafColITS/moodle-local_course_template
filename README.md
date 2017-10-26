@@ -1,6 +1,6 @@
 # Moodle Course Template
 
-[![Build Status](https://api.travis-ci.org/LafColITS/moodle-local_course_template.png)](https://api.travis-ci.org/LafColITS/moodle-local_course_template)
+[![Build Status](https://api.travis-ci.org/LafColITS/moodle-local_course_template.png?branch=MOODLE_31_STABLE)](https://api.travis-ci.org/LafColITS/moodle-local_course_template)
 
 This local plugin allows site administrators to create "template" courses which will be restored into new courses on course creation. The intended use case is defining common blocks and activities for a given academic term.
 

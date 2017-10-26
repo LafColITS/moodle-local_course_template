@@ -7,7 +7,7 @@ This local plugin allows site administrators to create "template" courses which 
 This is considered BETA code; please report any issues to [GitHub](https://github.com/LafColITS/moodle-local_course_template/issues).
 
 ## Requirements
-- Moodle 3.1 (build 2016052300 or later)
+- Moodle 3.2 (build 2016120500 or later)
 
 ## Installation
 Copy the course_template folder into your /local directory and visit your Admin Notification page to complete the installation.

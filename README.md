@@ -1,13 +1,11 @@
-# Moodle Course Template
+# Use template on course creation
 
 [![Build Status](https://api.travis-ci.org/LafColITS/moodle-local_course_template.png)](https://api.travis-ci.org/LafColITS/moodle-local_course_template)
 
-This local plugin allows site administrators to create "template" courses which will be restored into new courses on course creation. The intended use case is defining common blocks and activities for a given academic term.
-
-This is considered BETA code; please report any issues to [GitHub](https://github.com/LafColITS/moodle-local_course_template/issues).
+This local plugin allows site administrators to create "template" courses in Moodle which will be restored into new courses on course creation. The intended use case is defining common blocks and activities for a given academic term.
 
 ## Requirements
-- Moodle 3.2 (build 2016120500 or later)
+- Moodle 3.4 (build 2017111300 or later)
 
 ## Installation
 Copy the course_template folder into your /local directory and visit your Admin Notification page to complete the installation.

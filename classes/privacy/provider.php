@@ -15,18 +15,28 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * @package    local_course_template
- * @copyright  2016 Lafayette College ITS
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * Privacy implementation for local_course_template.
+ *
+ * @package   local_course_template
+ * @copyright 2018 Lafayette College ITS
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
+namespace local_course_template\privacy;
 
 defined('MOODLE_INTERNAL') || die();
 
-$string['cachedef_templates'] = 'Course template course ids';
-$string['cleanuptask'] = 'Cleanup course template backups';
-$string['extracttermcode'] = 'Term code';
-$string['extracttermcode_desc'] = 'Used to populate [TERMCODE]. Derived from course idnumber.';
-$string['pluginname'] = 'Use template on course creation';
-$string['privacy:metadata'] = 'The Use template on course creation plugin does not store any personal data.';
-$string['templatenameformat'] = 'Template shortname format';
-$string['templatenameformat_desc'] = 'Expected shortname format for template courses';
+class provider implements
+    // This plugin does not store any personal user data.
+    \core_privacy\local\metadata\null_provider {
+
+    /**
+     * Get the language string identifier with the component's language
+     * file to explain why this plugin stores no data.
+     *
+     * @return  string
+     */
+    public static function get_reason() {
+        return 'privacy:metadata';
+    }
+}

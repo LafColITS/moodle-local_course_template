@@ -10,7 +10,7 @@ php:
  - 7.1
 
 addons:
-  postgresql: "9.3"
+  postgresql: "9.4"
   firefox: "47.0.1"
   apt:
     packages:
@@ -20,8 +20,10 @@ addons:
 env:
  matrix:
   - DB=pgsql MOODLE_BRANCH=MOODLE_34_STABLE
+  - DB=pgsql MOODLE_BRANCH=MOODLE_35_STABLE
   - DB=pgsql MOODLE_BRANCH=master
   - DB=mysqli MOODLE_BRANCH=MOODLE_34_STABLE
+  - DB=mysqli MOODLE_BRANCH=MOODLE_35_STABLE
   - DB=mysqli MOODLE_BRANCH=master
 
 before_install:

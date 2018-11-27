@@ -27,7 +27,20 @@ require_once($CFG->dirroot . '/lib/filestorage/mbz_packer.php');
 require_once($CFG->dirroot . '/backup/util/includes/backup_includes.php');
 require_once($CFG->dirroot . '/backup/util/includes/restore_includes.php');
 
+/**
+ * Creates templated course backups and applies settings.
+ *
+ * @package local_course_template
+ * @copyright 2016 Lafayette College ITS
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class local_course_template_backup {
+    /**
+     * Creates a backup for the given course and extracts it to temporary file storage.
+     *
+     * @param int $courseid The course to backup
+     * @return int The courseid
+     */
     public static function create_backup($courseid) {
         global $CFG;
 
@@ -73,6 +86,13 @@ class local_course_template_backup {
         return $courseid;
     }
 
+    /**
+     * Takes template course backup and restores it to the given course.
+     *
+     * @param int $templateid The id of the template course
+     * @param int $courseid The id of the target course
+     * @return bool A status indicating success or failure
+     */
     public static function restore_backup($templateid, $courseid) {
         $admin = get_admin();
         $rc = new restore_controller(
@@ -87,7 +107,10 @@ class local_course_template_backup {
     }
 
     /**
+     * Apply standing settings to the restore controller before executing the restore.
+     *
      * @copyright 2011 Louisiana State University
+     * @param restore_controller $rc The restore controller
      */
     protected static function apply_defaults($rc) {
         $settings = array(

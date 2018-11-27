@@ -24,7 +24,19 @@ namespace local_course_template;
 
 defined('MOODLE_INTERNAL') || die();
 
+/**
+ * Observer functions for the plugin.
+ *
+ * @package local_course_template
+ * @copyright 2016 Lafayette College ITS
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class observers {
+    /**
+     * Attach the template function to new course creations.
+     *
+     * @param \core\event\course_created $event the course creation event
+     */
     public static function course_created(\core\event\course_created $event) {
         if (empty($event->objectid)) {
             return;

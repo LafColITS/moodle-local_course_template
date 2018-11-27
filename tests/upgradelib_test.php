@@ -15,6 +15,8 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * Unit tests for course module cleanup on upgrade.
+ *
  * @package   local_course_template
  * @copyright 2017 Lafayette College ITS
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -25,7 +27,17 @@ defined('MOODLE_INTERNAL') || die();
 global $CFG;
 require_once($CFG->dirroot . '/local/course_template/db/upgradelib.php');
 
+/**
+ * Unit tests covering course module cleanup on upgrade.
+ *
+ * @package local_course_template
+ * @copyright 2016 Lafayette College ITS
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class local_course_template_upgradelib_testcase extends advanced_testcase {
+    /**
+     * Test that vestigial news forum course modules are cleaned up.
+     */
     public function test_upgradelib() {
         global $DB;
         $this->resetAfterTest(true);

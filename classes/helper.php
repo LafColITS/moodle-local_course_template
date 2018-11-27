@@ -23,7 +23,20 @@
  */
 defined('MOODLE_INTERNAL') || die();
 
+/**
+ * Various helper functions for the plugin.
+ *
+ * @package local_course_template
+ * @copyright 2016 Lafayette College ITS
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class local_course_template_helper {
+    /**
+     * Applies the course template to the given course.
+     *
+     * @param int $courseid The target course.
+     * @return bool A status indicating success or failure
+     */
     public static function template_course($courseid) {
 
         $templatecourseid = self::find_term_template($courseid);
@@ -50,8 +63,9 @@ class local_course_template_helper {
 
     /**
      * Locate the term template for the course.
+     *
      * @param int $courseid The course.
-     * @return int, or false on failure
+     * @return int|bool The course it for the template, or false if none found
      */
     protected static function find_term_template($courseid) {
         global $DB;
@@ -92,6 +106,7 @@ class local_course_template_helper {
 
     /**
      * Remove news forums created by the template.
+     *
      * @param int $courseid the course
      */
     protected static function prune_news_forums($courseid) {

@@ -15,6 +15,8 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * Unit tests for the plugin.
+ *
  * @package   local_course_template
  * @copyright 2016 Lafayette College ITS
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -22,7 +24,17 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+/**
+ * Unit tests covering course template creation.
+ *
+ * @package local_course_template
+ * @copyright 2016 Lafayette College ITS
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class local_course_template_template_courses_testcase extends advanced_testcase {
+    /**
+     * Find course templates and apply them to new courses.
+     */
     public function test_course_templating() {
         global $DB;
 

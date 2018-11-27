@@ -15,6 +15,8 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * Define scheduled tasks for the plugin.
+ *
  * @package   local_course_template
  * @category  task
  * @copyright 2016 Lafayette College ITS

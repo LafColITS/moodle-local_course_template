@@ -24,11 +24,26 @@ namespace local_course_template\task;
 
 defined('MOODLE_INTERNAL') || die();
 
+/**
+ * Scheduled task to purge old template backups.
+ *
+ * @package local_course_template
+ * @copyright 2016 Lafayette College ITS
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class cleanup_task extends \core\task\scheduled_task {
+    /**
+     * Get the name of the task.
+     *
+     * @return string The name of the task
+     */
     public function get_name() {
         return get_string('cleanuptask', 'local_course_template');
     }
 
+    /**
+     * Execute the task
+     */
     public function execute() {
         global $DB;
 

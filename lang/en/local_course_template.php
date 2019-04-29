@@ -24,6 +24,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+$string['cachedef_backups'] = 'Course template backups';
 $string['cachedef_templates'] = 'Course template course ids';
 $string['cleanuptask'] = 'Cleanup course template backups';
 $string['extracttermcode'] = 'Term code';

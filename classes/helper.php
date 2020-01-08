@@ -90,9 +90,14 @@ class local_course_template_helper {
                 $templatecourse = $DB->get_record('course', array('shortname' => $templateshortname));
                 if (empty($templatecourse)) {
                     // No template found.
+                    $defaulttemplateshortname = get_config('local_course_template', 'defaulttemplate');
+                    $defaulttemplatecourse = $DB->get_record('course', array('shortname' => $defaulttemplateshortname));
+                    if (!empty($defaulttemplateshortname && !empty($defaulttemplatecourse)) {
+                        $cache->set($defaulttemplateshortname, $defaulttemplatecourse->id);
+                        return $defaulttemplatecourse->id;
+                    }
                     return false;
                 } else {
-                    $cache->set($templateshortname, $templatecourse->id);
                     return $templatecourse->id;
                 }
             } else {

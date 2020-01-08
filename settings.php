@@ -35,8 +35,4 @@ if ($hassiteconfig) {
     $settings->add(new admin_setting_configtext('local_course_template/templatenameformat',
         new lang_string('templatenameformat', 'local_course_template'),
         new lang_string('templatenameformat_desc', 'local_course_template'), 'Template-[TERMCODE]', PARAM_NOTAGS));
-
-    $settings->add(new admin_setting_configtext('local_course_template/defaulttemplate',
-        get_string('defaulttemplate', 'local_course_template'),
-        get_string('defaulttemplate_desc', 'local_course_template'), '', PARAM_NOTAGS));
 }

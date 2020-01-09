@@ -92,7 +92,7 @@ class local_course_template_helper {
                     // No template found.
                     $defaulttemplateshortname = get_config('local_course_template', 'defaulttemplate');
                     $defaulttemplatecourse = $DB->get_record('course', array('shortname' => $defaulttemplateshortname));
-                    if (!empty($defaulttemplateshortname && !empty($defaulttemplatecourse)) {
+                    if (!empty($defaulttemplateshortname && !empty($defaulttemplatecourse))) {
                         $cache->set($defaulttemplateshortname, $defaulttemplatecourse->id);
                         return $defaulttemplatecourse->id;
                     }

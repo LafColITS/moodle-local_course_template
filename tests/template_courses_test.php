@@ -43,8 +43,9 @@ class local_course_template_template_courses_testcase extends advanced_testcase 
         // Configure the plugin.
         set_config('extracttermcode', '/[A-Za-z0-9\.]+([0-9]{6})/', 'local_course_template');
         set_config('templatenameformat', 'Template-[TERMCODE]', 'local_course_template');
+        set_config('defaulttemplate', 'default-template', 'local_course_template');
 
-        // Create the template course.
+        // Create the template courses.
         $tc1 = $this->getDataGenerator()->create_course(
             array(
                 'name' => 'Template Course 1',
@@ -66,6 +67,15 @@ class local_course_template_template_courses_testcase extends advanced_testcase 
             array('course' => $tc2->id, 'type' => 'news'));
         $this->getDataGenerator()->create_module('forum',
             array('course' => $tc2->id, 'type' => 'news'));
+
+        $tcd = $this->getDataGenerator()->create_course(
+            array(
+                'name' => 'Default Template Course',
+                'shortname' => 'default-template'
+            )
+        );
+        $activity = $this->getDataGenerator()->create_module('url',
+            array('course' => $tcd->id));
 
         // Course matching 201610 template.
         $this->getDataGenerator()->create_course(
@@ -91,9 +101,20 @@ class local_course_template_template_courses_testcase extends advanced_testcase 
         $this->assertEquals(1, $DB->count_records('forum', array('course' => $c2->id)));
         $this->assertEquals(2, $DB->count_records('course_modules', array('course' => $c2->id)));
 
+        // Course matching termcode regex, but not matching a template.
+        $this->assertEquals(1, $DB->count_records('url'));
+        $this->getDataGenerator()->create_course(
+            array(
+                'idnumber' => 'XLSB7201630'
+            )
+        );
+        $this->assertEquals(2, $DB->count_records('url'));
+        $this->assertEquals(2, $DB->count_records('assign'));
+
         // Course with no template.
         $this->getDataGenerator()->create_course();
 
+        $this->assertEquals(2, $DB->count_records('url'));
         $this->assertEquals(2, $DB->count_records('label'));
         $this->assertEquals(2, $DB->count_records('assign'));
 
@@ -118,6 +139,5 @@ class local_course_template_template_courses_testcase extends advanced_testcase 
         );
         $this->assertEquals(193, $DB->count_records('label'));
         $this->assertEquals(2, $DB->count_records('assign'));
-
     }
 }

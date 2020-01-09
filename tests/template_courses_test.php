@@ -68,15 +68,6 @@ class local_course_template_template_courses_testcase extends advanced_testcase 
         $this->getDataGenerator()->create_module('forum',
             array('course' => $tc2->id, 'type' => 'news'));
 
-        $tcd = $this->getDataGenerator()->create_course(
-            array(
-                'name' => 'Default Template Course',
-                'shortname' => 'default-template'
-            )
-        );
-        $activity = $this->getDataGenerator()->create_module('url',
-            array('course' => $tcd->id));
-
         // Course matching 201610 template.
         $this->getDataGenerator()->create_course(
             array(
@@ -102,10 +93,32 @@ class local_course_template_template_courses_testcase extends advanced_testcase 
         $this->assertEquals(2, $DB->count_records('course_modules', array('course' => $c2->id)));
 
         // Course matching termcode regex, but not matching a template.
-        $this->assertEquals(1, $DB->count_records('url'));
+        // There's no default right now, so this should NOT be based on a template.
+        $this->assertEquals(0, $DB->count_records('url'));
         $this->getDataGenerator()->create_course(
             array(
                 'idnumber' => 'XLSB7201630'
+            )
+        );
+        $this->assertEquals(0, $DB->count_records('url'));
+        $this->assertEquals(2, $DB->count_records('assign'));
+
+        // Create default template course.
+        $tcd = $this->getDataGenerator()->create_course(
+            array(
+                'name' => 'Default Template Course',
+                'shortname' => 'default-template'
+            )
+        );
+        $activity = $this->getDataGenerator()->create_module('url',
+            array('course' => $tcd->id));
+
+        // Course matching termcode regex, but not matching a template.
+        // Now there IS a default template, so this should use it.
+        $this->assertEquals(1, $DB->count_records('url'));
+        $this->getDataGenerator()->create_course(
+            array(
+                'idnumber' => 'XLSB7201640'
             )
         );
         $this->assertEquals(2, $DB->count_records('url'));

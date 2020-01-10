@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Added default template functionality
+
 ## 3.4.1 (May 18, 2019)
 
 - Fixed missing language string

@@ -20,6 +20,20 @@ The plugin listens on the `\core\event\course_created` event and fires immediate
 
 You should consider overriding Moodle's default block settings in config.php: `$CFG->defaultblocks_override = '';`. Otherwise you will get two sets of blocks on course creation. Manually configure the blocks in the template course instead.
 
+### Default template
+
+You may specify a default template course in the "Default template course shortname" setting. If there is a course with that shortname, it will be used as the template for any course which matches the termcode regex but does _not_ match with a specific template.
+
+Let's say you  have termcode regex `/[A-Za-z0-9\.\-]+-([A-Z])-\d+/`, where the extracted substring is a department code. Then let's say you have the following template courses (shortnames):
+
+- Template-BIO
+- Template-HIS
+- Template-MTH
+
+These template courses will be used for Biology (BIO), History (HIS), and Math (MTH) courses respectively. Let's say you don't have specific templates for the other departments (POL, SCI, ENG, EPI, etc.), but you do want them to be based on a generalized template. You can create a fourth template course, and give it a shortname that matches the "Default template course shortname" setting value (eg `default-template`). Then, any course which matches the regex -- that is, any course from which a termcode is successfully extracted -- will be based on the default template course if it does not match a specific template.
+
+So, the course with idnumber `intro-BIO-201910` will still use `Template-BIO`, but the course with idnumber `shakespeare-sem-ENG-201920` will use `default-template`. A course with idnumber `study-abroad-201950` will not use any template.
+
 ### Sample regular expressions
 
 The basic use case above, `/[0-9]+\.([0-9]+)/`, would return `YYYYYY` from the following idnumbers:

@@ -1,9 +1,10 @@
 # Changelog
 
-## Unreleased
+## 3.6.0 (January 21, 2020)
 
 - Added default template functionality
 - Added custom 'template copied' event and logging
+- Dropped support for Moodle below 3.6
 
 ## 3.4.1 (May 18, 2019)
 

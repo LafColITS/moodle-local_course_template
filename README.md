@@ -47,6 +47,10 @@ A more complicated example, `/[A-Za-z0-9\.]+([0-9]{6})/`, would capture the foll
 - `7866a.201730`
 - `XLSB7201610`
 
+### Event / Observers
+
+There is a custom event `local_course_template\event\template_copied`, which is triggered after template copying is complete. This also adds a system-level log entry which specifies the template course ID and the target course ID.
+
 ## Acknowledgements
 
 This plugin was inspired by the course enrollment/templating plugin in use at Wesleyan University. The restoration controller settings are derived from LSU's [Simplified Restore block](https://github.com/lsuits/simple_restore).

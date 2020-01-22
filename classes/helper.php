@@ -58,6 +58,18 @@ class local_course_template_helper {
 
         // Cleanup potential news forum duplication.
         self::prune_news_forums($courseid);
+
+        // Trigger custom event.
+        $systemcontext = context_system::instance();
+        $event = \local_course_template\event\template_copied::create([
+            'context' => $systemcontext,
+            'other' => [
+                'courseid' => $courseid,
+                'templateid' => $templatecourseid
+            ]
+        ]);
+        $event->trigger();
+
         return true;
     }
 

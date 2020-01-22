@@ -3,6 +3,7 @@
 ## Unreleased
 
 - Added default template functionality
+- Added custom 'template copied' event and logging
 
 ## 3.4.1 (May 18, 2019)
 

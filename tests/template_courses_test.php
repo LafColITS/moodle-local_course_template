@@ -40,6 +40,11 @@ class local_course_template_template_courses_testcase extends advanced_testcase 
 
         $this->resetAfterTest(true);
 
+        // Enable logging.
+        $this->preventResetByRollback();
+        set_config('enabled_stores', 'logstore_standard', 'tool_log');
+        set_config('buffersize', 0, 'logstore_standard');
+
         // Configure the plugin.
         set_config('extracttermcode', '/[A-Za-z0-9\.]+([0-9]{6})/', 'local_course_template');
         set_config('templatenameformat', 'Template-[TERMCODE]', 'local_course_template');
@@ -69,7 +74,7 @@ class local_course_template_template_courses_testcase extends advanced_testcase 
             array('course' => $tc2->id, 'type' => 'news'));
 
         // Course matching 201610 template.
-        $this->getDataGenerator()->create_course(
+        $c1 = $this->getDataGenerator()->create_course(
             array(
                 'idnumber' => '1000.201610'
             )
@@ -77,6 +82,17 @@ class local_course_template_template_courses_testcase extends advanced_testcase 
 
         $this->assertEquals(2, $DB->count_records('label'));
         $this->assertEquals(1, $DB->count_records('assign'));
+
+        // Check logging.
+        $logs = $DB->get_records('logstore_standard_log', array('component' => 'local_course_template'));
+        $this->assertEquals(1, count($logs));
+        $log = $logs[array_keys($logs)[0]];
+        $this->assertEquals('copied', $log->action);
+        $this->assertEquals('\local_course_template\event\template_copied', $log->eventname);
+        $this->assertEquals('c', $log->crud);
+        $other = @unserialize($log->other) ? unserialize($log->other) : json_decode($log->other, true);
+        $this->assertEquals($c1->id, $other['courseid']);
+        $this->assertEquals($tc1->id, $other['templateid']);
 
         // Course matching 201620 template.
         $c2 = $this->getDataGenerator()->create_course(
@@ -87,6 +103,14 @@ class local_course_template_template_courses_testcase extends advanced_testcase 
 
         $this->assertEquals(2, $DB->count_records('label'));
         $this->assertEquals(2, $DB->count_records('assign'));
+
+        // Check logging.
+        $logs = $DB->get_records('logstore_standard_log', array('component' => 'local_course_template'));
+        $this->assertEquals(2, count($logs));
+        $log = end($logs);
+        $other = @unserialize($log->other) ? unserialize($log->other) : json_decode($log->other, true);
+        $this->assertEquals($c2->id, $other['courseid']);
+        $this->assertEquals($tc2->id, $other['templateid']);
 
         // Ensure second news forum is deleted.
         $this->assertEquals(1, $DB->count_records('forum', array('course' => $c2->id)));
@@ -103,6 +127,10 @@ class local_course_template_template_courses_testcase extends advanced_testcase 
         $this->assertEquals(0, $DB->count_records('url'));
         $this->assertEquals(2, $DB->count_records('assign'));
 
+        // Check logging.
+        $logs = $DB->get_records('logstore_standard_log', array('component' => 'local_course_template'));
+        $this->assertEquals(2, count($logs));
+
         // Create default template course.
         $tcd = $this->getDataGenerator()->create_course(
             array(
@@ -116,7 +144,7 @@ class local_course_template_template_courses_testcase extends advanced_testcase 
         // Course matching termcode regex, but not matching a template.
         // Now there IS a default template, so this should use it.
         $this->assertEquals(1, $DB->count_records('url'));
-        $this->getDataGenerator()->create_course(
+        $cd = $this->getDataGenerator()->create_course(
             array(
                 'idnumber' => 'XLSB7201640'
             )
@@ -124,12 +152,24 @@ class local_course_template_template_courses_testcase extends advanced_testcase 
         $this->assertEquals(2, $DB->count_records('url'));
         $this->assertEquals(2, $DB->count_records('assign'));
 
+        // Check logging.
+        $logs = $DB->get_records('logstore_standard_log', array('component' => 'local_course_template'));
+        $this->assertEquals(3, count($logs));
+        $log = end($logs);
+        $other = @unserialize($log->other) ? unserialize($log->other) : json_decode($log->other, true);
+        $this->assertEquals($cd->id, $other['courseid']);
+        $this->assertEquals($tcd->id, $other['templateid']);
+
         // Course with no template.
         $this->getDataGenerator()->create_course();
 
         $this->assertEquals(2, $DB->count_records('url'));
         $this->assertEquals(2, $DB->count_records('label'));
         $this->assertEquals(2, $DB->count_records('assign'));
+
+        // Check logging.
+        $logs = $DB->get_records('logstore_standard_log', array('component' => 'local_course_template'));
+        $this->assertEquals(3, count($logs));
 
         // Bulk course creation.
         $category1 = $this->getDataGenerator()->create_category();
@@ -144,13 +184,25 @@ class local_course_template_template_courses_testcase extends advanced_testcase 
         $this->assertEquals(192, $DB->count_records('label'));
         $this->assertEquals(2, $DB->count_records('assign'));
 
+        // Check logging.
+        $logs = $DB->get_records('logstore_standard_log', array('component' => 'local_course_template'));
+        $this->assertEquals(193, count($logs));
+
         // Course matching 201610 template.
-        $this->getDataGenerator()->create_course(
+        $c3 = $this->getDataGenerator()->create_course(
             array(
                 'idnumber' => 'XLSB7201610'
             )
         );
         $this->assertEquals(193, $DB->count_records('label'));
         $this->assertEquals(2, $DB->count_records('assign'));
+
+        // Check logging.
+        $logs = $DB->get_records('logstore_standard_log', array('component' => 'local_course_template'));
+        $this->assertEquals(194, count($logs));
+        $log = end($logs);
+        $other = @unserialize($log->other) ? unserialize($log->other) : json_decode($log->other, true);
+        $this->assertEquals($c3->id, $other['courseid']);
+        $this->assertEquals($tc1->id, $other['templateid']);
     }
 }

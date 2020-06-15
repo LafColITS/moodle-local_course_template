@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.6.1 (June 15, 2020)
+
+- Code cleanup
+- Streamlined unit testing matrix
+
 ## 3.6.0 (January 21, 2020)
 
 - Added default template functionality

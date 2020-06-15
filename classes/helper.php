@@ -76,10 +76,10 @@ class local_course_template_helper {
     /**
      * Locate the term template for the course.
      *
-     * @param int $courseid The course.
+     * @param int $targetid The course.
      * @return int|bool The course it for the template, or false if none found
      */
-    protected static function find_term_template($courseid) {
+    protected static function find_term_template($targetid) {
         global $DB;
 
         // Don't continue if there's no pattern.
@@ -88,32 +88,32 @@ class local_course_template_helper {
             return false;
         }
 
-        $course = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
-        $subject = $course->idnumber;
+        $target = $DB->get_record('course', array('id' => $targetid), '*', MUST_EXIST);
+        $subject = $target->idnumber;
         preg_match($pattern, $subject, $matches);
         if (!empty($matches) && count($matches) >= 2) {
-            $templateshortname = str_replace('[TERMCODE]', $matches[1],
+            $shortname = str_replace('[TERMCODE]', $matches[1],
                 get_config('local_course_template', 'templatenameformat'));
 
             // Check if the idnumber is cached.
             $cache = cache::make('local_course_template', 'templates');
-            $templatecourseid = $cache->get($templateshortname);
-            if ($templatecourseid == false) {
-                $templatecourse = $DB->get_record('course', array('shortname' => $templateshortname));
-                if (empty($templatecourse)) {
+            $courseid = $cache->get($shortname);
+            if ($courseid == false) {
+                $course = $DB->get_record('course', array('shortname' => $shortname));
+                if (empty($course)) {
                     // No template found.
-                    $defaulttemplateshortname = get_config('local_course_template', 'defaulttemplate');
-                    $defaulttemplatecourse = $DB->get_record('course', array('shortname' => $defaulttemplateshortname));
-                    if (!empty($defaulttemplateshortname && !empty($defaulttemplatecourse))) {
-                        $cache->set($defaulttemplateshortname, $defaulttemplatecourse->id);
-                        return $defaulttemplatecourse->id;
+                    $defaultshortname = get_config('local_course_template', 'defaulttemplate');
+                    $defaultcourse = $DB->get_record('course', array('shortname' => $defaultshortname));
+                    if (!empty($defaultshortname && !empty($defaultcourse))) {
+                        $cache->set($defaultshortname, $defaultcourse->id);
+                        return $defaultcourse->id;
                     }
                     return false;
                 } else {
-                    return $templatecourse->id;
+                    return $course->id;
                 }
             } else {
-                return $templatecourseid;
+                return $courseid;
             }
         } else {
             // This course doesn't conform to the given naming convention, so skip.

@@ -45,9 +45,7 @@ class local_course_template_backup {
         global $CFG;
 
         // Try to find the backup.
-        $context = context_course::instance($courseid);
-        $cache = cache::make('local_course_template', 'backups');
-        $storedfile = $cache->get($context->id);
+        $storedfile = self::get_cached_course($courseid);
         if ($storedfile === false) {
 
             // Instantiate controller.
@@ -77,13 +75,51 @@ class local_course_template_backup {
             );
             $storedfile = $fs->create_file_from_storedfile($filerecord, $file);
             $file->delete();
-            $cache->set($context->id, $storedfile);
+            self::set_cached_course($context->id, $storedfile);
         }
 
         // Extract the backup.
         $packer = new mbz_packer();
         $storedfile->extract_to_pathname($packer, "$CFG->tempdir/backup/$courseid");
         return $courseid;
+    }
+
+    /**
+     * Returns the cached backup course, if it exists.
+     *
+     * Returns the cached backup course if it exists, or false it it does not. Also returns
+     * false if caching is disabled.
+     *
+     * @param int $courseid the courseid of the template course
+     * @return \stored_file|boolean
+     */
+    private static function get_cached_course($courseid) {
+        $enablecaching = get_config('local_course_template', 'enablecaching');
+        if (empty($enablecaching) || $enablecaching == 0) {
+            return false;
+        }
+        $context = context_course::instance($courseid);
+        $cache = cache::make('local_course_template', 'backups');
+        $storedfile = $cache->get($context->id);
+        return $storedfile;
+    }
+
+    /**
+     * Set the cached backup course.
+     *
+     * Caches the stored file for the backup of the given template course. It does nothing
+     * if caching is disabled.
+     *
+     * @param int $contextid the contextid of the course
+     * @param \storedfile the stored file of the backup
+     */
+    private static function set_cached_course($contextid, $storedfile) {
+        $enablecaching = get_config('local_course_template', 'enablecaching');
+        if (empty($enablecaching) || $enablecaching == 0) {
+            return;
+        }
+        $cache = cache::make('local_course_template', 'backups');
+        $cache->set($contextid, $storedfile);
     }
 
     /**

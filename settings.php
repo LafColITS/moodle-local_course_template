@@ -24,6 +24,8 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+require_once(dirname(__FILE__) . '/lib.php');
+
 if ($hassiteconfig) {
     $settings = new admin_settingpage('local_course_template', get_string('pluginname', 'local_course_template'));
     $ADMIN->add('localplugins', $settings);
@@ -39,4 +41,11 @@ if ($hassiteconfig) {
     $settings->add(new admin_setting_configtext('local_course_template/defaulttemplate',
         get_string('defaulttemplate', 'local_course_template'),
         get_string('defaulttemplate_desc', 'local_course_template'), '', PARAM_NOTAGS));
+
+    $enableconfig = new admin_setting_configcheckbox('local_course_template/enablecaching',
+        new lang_string('enablecaching', 'local_course_template'),
+        new lang_string('enablecaching_desc', 'local_course_template'),
+    1);
+    $enableconfig->set_updatedcallback('local_course_template_update_cache');
+    $settings->add($enableconfig);
 }

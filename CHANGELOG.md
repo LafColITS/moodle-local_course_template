@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Add option to disable caching
+
 ## 3.6.1 (June 15, 2020)
 
 - Code cleanup

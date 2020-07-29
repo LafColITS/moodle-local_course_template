@@ -51,6 +51,10 @@ A more complicated example, `/[A-Za-z0-9\.]+([0-9]{6})/`, would capture the foll
 
 There is a custom event `local_course_template\event\template_copied`, which is triggered after template copying is complete. This also adds a system-level log entry which specifies the template course ID and the target course ID.
 
+### Caching
+
+When a new course is created the plugin looks for the template course, then creates a backup of that template course. Both results are cached. The template course id is cached indefinitely; the course backup cache is cleared by the same job that removes the backup itself. By default this occurs every day at 3 AM. You may disable the caching behavior by unchecking "Enable caching" in the plugin settings.
+
 ## Acknowledgements
 
 This plugin was inspired by the course enrollment/templating plugin in use at Wesleyan University. The restoration controller settings are derived from LSU's [Simplified Restore block](https://github.com/lsuits/simple_restore).

@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- [Bugfix] Fix hard-coded admin id (thanks @jtsafran)
+
 ## 3.6.1 (June 15, 2020)
 
 - Code cleanup

@@ -114,7 +114,7 @@ class backup {
      * if caching is disabled.
      *
      * @param int $contextid the contextid of the course
-     * @param \storedfile the stored file of the backup
+     * @param \storedfile $storedfile the stored file of the backup
      */
     public static function set_cached_course($contextid, $storedfile) {
         $enablecaching = get_config('local_course_template', 'enablecaching');

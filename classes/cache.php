@@ -21,6 +21,9 @@
  * @copyright 2020 Lafayette College ITS
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
+namespace local_course_template;
+
 defined('MOODLE_INTERNAL') || die();
 
 /**
@@ -30,14 +33,31 @@ defined('MOODLE_INTERNAL') || die();
  * @copyright 2020 Lafayette College ITS
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class local_course_template_cache {
+class cache {
     /**
      * Unset the caches.
      */
     public static function clear() {
-        $backupcache = cache::make('local_course_template', 'backups');
+        $backupcache = \cache::make('local_course_template', 'backups');
         $backupcache->purge();
-        $templatecache = cache::make('local_course_template', 'templates');
+        $templatecache = \cache::make('local_course_template', 'templates');
         $templatecache->purge();
+
+        $backups = $DB->get_records('files', array('component' => 'local_course_template', 'filearea' => 'backup'));
+        $fs = get_file_storage();
+        foreach ($backups as $record) {
+            $file = $fs->get_file(
+                $record->contextid,
+                $record->component,
+                $record->filearea,
+                $record->itemid,
+                $record->filepath,
+                $record->filename
+            );
+            if ($file) {
+                $file->delete();
+                $cache->delete($record->contextid);
+            }
+        }
     }
 }

@@ -22,6 +22,8 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+namespace local_course_template;
+
 defined('MOODLE_INTERNAL') || die();
 
 /**
@@ -32,6 +34,6 @@ defined('MOODLE_INTERNAL') || die();
 function local_course_template_update_cache() {
     $enablecaching = get_config('local_course_template', 'enablecaching');
     if (empty($enablecaching) || $enablecaching == 0) {
-        \local_course_template_cache::clear();
+        cache::clear();
     }
 }

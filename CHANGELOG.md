@@ -2,7 +2,9 @@
 
 ## Unreleased
 
+- Add tests for caching functionality
 - Add option to disable caching
+- [Bugfix] template id caching was inconsistent
 
 ## 3.6.1 (June 15, 2020)
 

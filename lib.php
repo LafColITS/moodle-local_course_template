@@ -15,41 +15,25 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Scheduled tasks for the plugin.
+ * Local course template library functions.
  *
  * @package   local_course_template
- * @copyright 2016 Lafayette College ITS
+ * @copyright 2020 Lafayette College ITS
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace local_course_template\task;
+namespace local_course_template;
 
 defined('MOODLE_INTERNAL') || die();
 
 /**
- * Scheduled task to purge old template backups.
+ * Optionally purge the cache.
  *
- * @package local_course_template
- * @copyright 2016 Lafayette College ITS
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * Optionally purge the cache if the user disables caching.
  */
-class cleanup_task extends \core\task\scheduled_task {
-    /**
-     * Get the name of the task.
-     *
-     * @return string The name of the task
-     */
-    public function get_name() {
-        return get_string('cleanuptask', 'local_course_template');
-    }
-
-    /**
-     * Execute the task
-     */
-    public function execute() {
-        global $DB;
-
-        // Find and prune template backups.
+function local_course_template_update_cache() {
+    $enablecaching = get_config('local_course_template', 'enablecaching');
+    if (empty($enablecaching) || $enablecaching == 0) {
         cache::clear();
     }
 }

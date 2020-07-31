@@ -22,6 +22,8 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+namespace local_course_template;
+
 defined('MOODLE_INTERNAL') || die();
 
 /**
@@ -31,7 +33,7 @@ defined('MOODLE_INTERNAL') || die();
  * @copyright 2016 Lafayette College ITS
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class local_course_template_template_courses_testcase extends advanced_testcase {
+class local_course_template_testcase extends \advanced_testcase {
     /**
      * Find course templates and apply them to new courses.
      */
@@ -204,5 +206,75 @@ class local_course_template_template_courses_testcase extends advanced_testcase 
         $other = @unserialize($log->other) ? unserialize($log->other) : json_decode($log->other, true);
         $this->assertEquals($c3->id, $other['courseid']);
         $this->assertEquals($tc1->id, $other['templateid']);
+    }
+
+    public function test_course_caching() {
+        global $DB;
+
+        $this->resetAfterTest(true);
+
+        // Enable logging.
+        $this->preventResetByRollback();
+
+        // Configure the plugin.
+        set_config('extracttermcode', '/[A-Za-z0-9\.]+([0-9]{6})/', 'local_course_template');
+        set_config('templatenameformat', 'Template-[TERMCODE]', 'local_course_template');
+        set_config('defaulttemplate', 'default-template', 'local_course_template');
+        set_config('enablecaching', 1, 'local_course_template');
+
+        // Create the template course.
+        $tc1 = $this->getDataGenerator()->create_course(
+            array(
+                'name' => 'Template Course 1',
+                'shortname' => 'Template-201610'
+            )
+        );
+        $label1 = $this->getDataGenerator()->create_module('label',
+            array('course' => $tc1->id));
+
+        // Course matching 201610 template.
+        $c1 = $this->getDataGenerator()->create_course(
+            array(
+                'idnumber' => '1000.201610'
+            )
+        );
+
+        // Verify that the id was cached when $c1 was created.
+        $courseid = helper::get_cached_course_id($tc1->shortname);
+        $this->assertEquals($tc1->id, $courseid);
+        $coursebackup = backup::get_cached_course($tc1->id);
+        $this->assertInstanceOf('stored_file', $coursebackup);
+        $this->assertEquals(2, $DB->count_records('label'));
+
+        $label2 = $this->getDataGenerator()->create_module('label',
+            array('course' => $tc1->id));
+
+        // Course matching 201610 template.
+        $c2 = $this->getDataGenerator()->create_course(
+            array(
+                'idnumber' => '1001.201610'
+            )
+        );
+
+        // Verify that only two new labels have been created; the cached backup
+        // only has one label.
+        $this->assertEquals(4, $DB->count_records('label'));
+
+        // Disable caching.
+        set_config('enablecaching', 0, 'local_course_template');
+        $courseid = helper::get_cached_course_id($tc1->shortname);
+        $this->assertEquals(false, $courseid);
+        $coursebackup = backup::get_cached_course($tc1->id);
+        $this->assertEquals(false, $coursebackup);
+
+        // Course matching 201610 template.
+        $c3 = $this->getDataGenerator()->create_course(
+            array(
+                'idnumber' => '1002.201610'
+            )
+        );
+
+        // Verify that the new course creation has two labels.
+        $this->assertEquals(6, $DB->count_records('label'));
     }
 }

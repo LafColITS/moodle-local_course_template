@@ -21,6 +21,9 @@
  * @copyright 2016 Lafayette College ITS
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
+namespace local_course_template;
+
 defined('MOODLE_INTERNAL') || die();
 
 /**
@@ -30,7 +33,7 @@ defined('MOODLE_INTERNAL') || die();
  * @copyright 2016 Lafayette College ITS
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class local_course_template_helper {
+class helper {
     /**
      * Applies the course template to the given course.
      *
@@ -38,20 +41,19 @@ class local_course_template_helper {
      * @return bool A status indicating success or failure
      */
     public static function template_course($courseid) {
-
         $templatecourseid = self::find_term_template($courseid);
         if ($templatecourseid == false) {
             return;
         }
 
         // Create and extract template backup file.
-        $backupid = \local_course_template_backup::create_backup($templatecourseid);
+        $backupid = backup::create_backup($templatecourseid);
         if (!$backupid) {
             return false;
         }
 
         // Restore the backup.
-        $status = \local_course_template_backup::restore_backup($backupid, $courseid);
+        $status = backup::restore_backup($backupid, $courseid);
         if (!$status) {
             return false;
         }
@@ -60,8 +62,8 @@ class local_course_template_helper {
         self::prune_news_forums($courseid);
 
         // Trigger custom event.
-        $systemcontext = context_system::instance();
-        $event = \local_course_template\event\template_copied::create([
+        $systemcontext = \context_system::instance();
+        $event = event\template_copied::create([
             'context' => $systemcontext,
             'other' => [
                 'courseid' => $courseid,
@@ -96,8 +98,7 @@ class local_course_template_helper {
                 get_config('local_course_template', 'templatenameformat'));
 
             // Check if the idnumber is cached.
-            $cache = cache::make('local_course_template', 'templates');
-            $courseid = $cache->get($shortname);
+            $courseid = self::get_cached_course_id($shortname);
             if ($courseid == false) {
                 $course = $DB->get_record('course', array('shortname' => $shortname));
                 if (empty($course)) {
@@ -105,11 +106,12 @@ class local_course_template_helper {
                     $defaultshortname = get_config('local_course_template', 'defaulttemplate');
                     $defaultcourse = $DB->get_record('course', array('shortname' => $defaultshortname));
                     if (!empty($defaultshortname && !empty($defaultcourse))) {
-                        $cache->set($defaultshortname, $defaultcourse->id);
+                        self::set_cached_course_id($defaultshortname, $defaultcourse->id);
                         return $defaultcourse->id;
                     }
                     return false;
                 } else {
+                    self::set_cached_course_id($shortname, $course->id);
                     return $course->id;
                 }
             } else {
@@ -119,6 +121,43 @@ class local_course_template_helper {
             // This course doesn't conform to the given naming convention, so skip.
             return false;
         }
+    }
+
+    /**
+     * Returns the cached template course id, if it exists.
+     *
+     * Returns the cached template course id if it exists, or false it it does not. Also returns
+     * false if caching is disabled.
+     *
+     * @param string $shortname the shortname of the template course
+     * @return int|boolean
+     */
+    public static function get_cached_course_id($shortname) {
+        $enablecaching = get_config('local_course_template', 'enablecaching');
+        if (empty($enablecaching) || $enablecaching == 0) {
+            return false;
+        }
+        $cache = \cache::make('local_course_template', 'templates');
+        $courseid = $cache->get($shortname);
+        return $courseid;
+    }
+
+    /**
+     * Set the cached template course id.
+     *
+     * Caches the course id for the given template course. It does nothing
+     * if caching is disabled.
+     *
+     * @param string $shortname the course shortname
+     * @param int $courseid the course id
+     */
+    public static function set_cached_course_id($shortname, $courseid) {
+        $enablecaching = get_config('local_course_template', 'enablecaching');
+        if (empty($enablecaching) || $enablecaching == 0) {
+            return;
+        }
+        $cache = \cache::make('local_course_template', 'templates');
+        $cache->set($shortname, $courseid);
     }
 
     /**

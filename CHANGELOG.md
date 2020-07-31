@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 3.6.2 (July 31, 2020)
 
 - Add tests for caching functionality
 - Add option to disable caching

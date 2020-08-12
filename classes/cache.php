@@ -38,6 +38,8 @@ class cache {
      * Unset the caches.
      */
     public static function clear() {
+        global $DB;
+
         $backupcache = \cache::make('local_course_template', 'backups');
         $backupcache->purge();
         $templatecache = \cache::make('local_course_template', 'templates');
@@ -56,6 +58,7 @@ class cache {
             );
             if ($file) {
                 $file->delete();
+                $cache = \cache::make('local_course_template', 'backups');
                 $cache->delete($record->contextid);
             }
         }

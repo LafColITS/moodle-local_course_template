@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.6.3 (August 12, 2020)
+
+- [Bugfix] fix bug that would cause cleanup script to run continuously
+
 ## 3.6.2 (July 31, 2020)
 
 - Add tests for caching functionality

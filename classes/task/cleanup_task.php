@@ -50,6 +50,6 @@ class cleanup_task extends \core\task\scheduled_task {
         global $DB;
 
         // Find and prune template backups.
-        cache::clear();
+        \local_course_template\cache::clear();
     }
 }

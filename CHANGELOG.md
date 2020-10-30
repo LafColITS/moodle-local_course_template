@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Drop support for Moodle 3.6
+
 ## 3.6.3 (August 12, 2020)
 
 - [Bugfix] fix bug that would cause cleanup script to run continuously

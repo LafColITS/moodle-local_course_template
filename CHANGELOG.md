@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Migrate CI builds to Github Actions
 - Drop support for Moodle 3.6
 
 ## 3.6.3 (August 12, 2020)

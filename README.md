@@ -24,7 +24,7 @@ You should consider overriding Moodle's default block settings in config.php: `$
 
 You may specify a default template course in the "Default template course shortname" setting. If there is a course with that shortname, it will be used as the template for any course which matches the termcode regex but does _not_ match with a specific template.
 
-Let's say you  have termcode regex `/[A-Za-z0-9\.\-]+-([A-Z])-\d+/`, where the extracted substring is a department code. Then let's say you have the following template courses (shortnames):
+Let's say you  have termcode regex `/[A-Za-z0-9\.\-]+-([A-Z]+)-\d+/`, where the extracted substring is a department code. Then let's say you have the following template courses (shortnames):
 
 - Template-BIO
 - Template-HIS
@@ -54,6 +54,10 @@ There is a custom event `local_course_template\event\template_copied`, which is 
 ### Caching
 
 When a new course is created the plugin looks for the template course, then creates a backup of that template course. Both results are cached. The template course id is cached indefinitely; the course backup cache is cleared by the same job that removes the backup itself. By default this occurs every day at 3 AM. You may disable the caching behavior by unchecking "Enable caching" in the plugin settings.
+
+### Compatibilty with course copying
+
+Moodle's [course copy](https://docs.moodle.org/39/en/Course_copy) feature (introduced in Moodle 3.9) does not trigger a course created event so copying a course from the interface will *not* trigger this plugin.
 
 ## Acknowledgements
 

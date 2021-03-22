@@ -53,7 +53,7 @@ class backup {
 
             // Instantiate controller.
             $bc = new \backup_controller(
-                \backup::TYPE_1COURSE, $courseid, \backup::FORMAT_MOODLE, \backup::INTERACTIVE_NO, \backup::MODE_GENERAL, 2);
+                \backup::TYPE_1COURSE, $courseid, \backup::FORMAT_MOODLE, \backup::INTERACTIVE_NO, \backup::MODE_GENERAL, get_admin()->id);
 
             // Run the backup.
             $bc->set_status(\backup::STATUS_AWAITING);

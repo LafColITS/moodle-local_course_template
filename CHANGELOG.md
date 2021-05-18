@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Drop support for Moodle 3.7-3.8
+
 ## 3.7.0 (March 22, 2021)
 
 - Migrate CI builds to Github Actions

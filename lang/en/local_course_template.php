@@ -39,3 +39,6 @@ $string['pluginname'] = 'Use template on course creation';
 $string['privacy:metadata'] = 'The Use template on course creation plugin does not store any personal data.';
 $string['templatenameformat'] = 'Template shortname format';
 $string['templatenameformat_desc'] = 'Expected shortname format for template courses';
+$string['defaulttermcode'] = 'Default [TERMCODE]';
+$string['defaulttermcode_desc'] = 'Replacement [TERMCODE] if empty ( must be >= 2 caracters)';
+

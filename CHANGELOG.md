@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.7.1 (February 03, 2022)
+
+- Add default [Termcode] setting if empty
+
 ## Unreleased
 
 - Drop support for Moodle 3.7-3.8

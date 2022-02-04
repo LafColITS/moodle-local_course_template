@@ -93,6 +93,9 @@ class helper {
         $target = $DB->get_record('course', array('id' => $targetid), '*', MUST_EXIST);
         $subject = $target->idnumber;
         preg_match($pattern, $subject, $matches);
+
+        if (empty($matches)) $matches = array("",get_config('local_course_template', 'defaulttermcode')); 
+
         if (!empty($matches) && count($matches) >= 2) {
             $shortname = str_replace('[TERMCODE]', $matches[1],
                 get_config('local_course_template', 'templatenameformat'));

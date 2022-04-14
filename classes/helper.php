@@ -130,11 +130,12 @@ class helper {
      * false if caching is disabled.
      *
      * @param string $shortname the shortname of the template course
+     * @param boolean $disablecaching override caching behavior
      * @return int|boolean
      */
-    public static function get_cached_course_id($shortname) {
+    public static function get_cached_course_id($shortname, $disablecaching = false) {
         $enablecaching = get_config('local_course_template', 'enablecaching');
-        if (empty($enablecaching) || $enablecaching == 0) {
+        if ($disablecaching || empty($enablecaching) || $enablecaching == 0) {
             return false;
         }
         $cache = \cache::make('local_course_template', 'templates');

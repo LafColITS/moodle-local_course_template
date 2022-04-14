@@ -262,7 +262,7 @@ class local_course_template_testcase extends \advanced_testcase {
 
         // Disable caching.
         set_config('enablecaching', 0, 'local_course_template');
-        $courseid = helper::get_cached_course_id($tc1->shortname);
+        $courseid = helper::get_cached_course_id($tc1->shortname, true);
         $this->assertEquals(false, $courseid);
         $coursebackup = backup::get_cached_course($tc1->id);
         $this->assertEquals(false, $coursebackup);

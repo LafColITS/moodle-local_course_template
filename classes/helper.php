@@ -43,7 +43,7 @@ class helper {
     public static function template_course($courseid) {
         $templatecourseid = self::find_term_template($courseid);
         if ($templatecourseid == false) {
-            return;
+            return false;
         }
 
         // Create and extract template backup file.

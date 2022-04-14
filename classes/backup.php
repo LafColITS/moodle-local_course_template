@@ -94,11 +94,12 @@ class backup {
      * false if caching is disabled.
      *
      * @param int $courseid the courseid of the template course
+     * @param boolean $disablecaching override caching behavior
      * @return \stored_file|boolean
      */
-    public static function get_cached_course($courseid) {
+    public static function get_cached_course($courseid, $disablecaching = false) {
         $enablecaching = get_config('local_course_template', 'enablecaching');
-        if (empty($enablecaching) || $enablecaching == 0) {
+        if (empty($disablecaching || $enablecaching) || $enablecaching == 0) {
             return false;
         }
         $context = \context_course::instance($courseid);

@@ -26,6 +26,7 @@ namespace local_course_template;
 
 defined('MOODLE_INTERNAL') || die();
 
+require_once($CFG->dirroot . '/course/lib.php');
 require_once($CFG->dirroot . '/lib/filestorage/mbz_packer.php');
 require_once($CFG->dirroot . '/backup/util/includes/backup_includes.php');
 require_once($CFG->dirroot . '/backup/util/includes/restore_includes.php');
@@ -50,6 +51,8 @@ class backup {
         // Try to find the backup.
         $storedfile = self::get_cached_course($courseid);
         if ($storedfile === false) {
+            // Ensure we have a good course.
+            \course_integrity_check($courseid, null, null, true);
 
             // Instantiate controller.
             $bc = new \backup_controller(

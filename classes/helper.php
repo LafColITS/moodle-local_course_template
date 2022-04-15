@@ -90,7 +90,7 @@ class helper {
             return false;
         }
 
-        $target = $DB->get_record('course', array('id' => $targetid), '*', MUST_EXIST);
+        $target = get_course($targetid);
         $subject = $target->idnumber;
         preg_match($pattern, $subject, $matches);
         if (!empty($matches) && count($matches) >= 2) {

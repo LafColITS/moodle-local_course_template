@@ -133,13 +133,13 @@ class helper {
         $course = $DB->get_record('course', array('shortname' => $shortname));
         if ($course != false) {
             // Template found.
-            set_cached_course_id($shortname, $course->id);
+            self::set_cached_course_id($shortname, $course->id);
             return $course->id;
         }
     
         // Default template defined?
         $defaultshortname = get_config('local_course_template', 'defaulttemplate');
-        if(empty($defaultshortname)) {
+        if (empty($defaultshortname)) {
             return false;
         }
 
@@ -147,7 +147,7 @@ class helper {
         $course = $DB->get_record('course', array('shortname' => $defaultshortname));
         if ($course != false) {
             // Template found.
-            set_cached_course_id($defaultshortname, $course->id);
+            self::set_cached_course_id($defaultshortname, $course->id);
             return $course->id;
         }
 

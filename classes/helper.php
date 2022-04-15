@@ -112,7 +112,6 @@ class helper {
      * Returns the template course id if it exists, or false it it does not.
      *
      * @param string $shortname the shortname of the template course
-     * @param boolean $disablecaching override caching behavior
      * @return int|boolean
      */
     protected static function get_template_course_id($shortname) {
@@ -136,7 +135,7 @@ class helper {
             self::set_cached_course_id($shortname, $course->id);
             return $course->id;
         }
-    
+
         // Default template defined?
         $defaultshortname = get_config('local_course_template', 'defaulttemplate');
         if (empty($defaultshortname)) {

@@ -240,7 +240,8 @@ class local_course_template_testcase extends \advanced_testcase {
         );
 
         // Verify that the id was cached when $c1 was created.
-        $courseid = helper::get_cached_course_id($tc1->shortname);
+        $cache = \cache::make('local_course_template', 'templates');
+        $courseid = $cache->get($tc1->shortname);
         $this->assertEquals($tc1->id, $courseid);
         $coursebackup = backup::get_cached_course($tc1->id);
         $this->assertInstanceOf('stored_file', $coursebackup);
@@ -262,10 +263,6 @@ class local_course_template_testcase extends \advanced_testcase {
 
         // Disable caching.
         set_config('enablecaching', 0, 'local_course_template');
-        $courseid = helper::get_cached_course_id($tc1->shortname, true);
-        $this->assertEquals(false, $courseid);
-        $coursebackup = backup::get_cached_course($tc1->id, true);
-        $this->assertEquals(false, $coursebackup);
 
         // Course matching 201610 template.
         $c3 = $this->getDataGenerator()->create_course(

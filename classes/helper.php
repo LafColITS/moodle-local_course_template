@@ -97,26 +97,9 @@ class helper {
             $shortname = str_replace('[TERMCODE]', $matches[1],
                 get_config('local_course_template', 'templatenameformat'));
 
-            // Check if the idnumber is cached.
-            $courseid = self::get_cached_course_id($shortname);
-            if ($courseid == false) {
-                $course = $DB->get_record('course', array('shortname' => $shortname));
-                if (empty($course)) {
-                    // No template found.
-                    $defaultshortname = get_config('local_course_template', 'defaulttemplate');
-                    $defaultcourse = $DB->get_record('course', array('shortname' => $defaultshortname));
-                    if (!empty($defaultshortname && !empty($defaultcourse))) {
-                        self::set_cached_course_id($defaultshortname, $defaultcourse->id);
-                        return $defaultcourse->id;
-                    }
-                    return false;
-                } else {
-                    self::set_cached_course_id($shortname, $course->id);
-                    return $course->id;
-                }
-            } else {
-                return $courseid;
-            }
+            // Get the idnumber for the template course.
+            $courseid = self::get_template_course_id($shortname);
+            return $courseid;
         } else {
             // This course doesn't conform to the given naming convention, so skip.
             return false;
@@ -124,23 +107,51 @@ class helper {
     }
 
     /**
-     * Returns the cached template course id, if it exists.
+     * Returns the template course id, if it exists.
      *
-     * Returns the cached template course id if it exists, or false it it does not. Also returns
-     * false if caching is disabled.
+     * Returns the template course id if it exists, or false it it does not.
      *
      * @param string $shortname the shortname of the template course
      * @param boolean $disablecaching override caching behavior
      * @return int|boolean
      */
-    public static function get_cached_course_id($shortname, $disablecaching = false) {
+    protected static function get_template_course_id($shortname) {
+        global $DB;
+
+        $courseid = false;
         $enablecaching = get_config('local_course_template', 'enablecaching');
-        if ($disablecaching || empty($enablecaching) || $enablecaching == 0) {
+        if ($enablecaching) {
+            $cache = \cache::make('local_course_template', 'templates');
+            $courseid = $cache->get($shortname);
+        }
+
+        // If found in the cache, return, otherwise continue with lookup.
+        if ($courseid != false) {
+            return $courseid;
+        }
+
+        $course = $DB->get_record('course', array('shortname' => $shortname));
+        if ($course != false) {
+            // Template found.
+            set_cached_course_id($shortname, $course->id);
+            return $course->id;
+        }
+    
+        // Default template defined?
+        $defaultshortname = get_config('local_course_template', 'defaulttemplate');
+        if(empty($defaultshortname)) {
             return false;
         }
-        $cache = \cache::make('local_course_template', 'templates');
-        $courseid = $cache->get($shortname);
-        return $courseid;
+
+        // Look for the default template.
+        $course = $DB->get_record('course', array('shortname' => $defaultshortname));
+        if ($course != false) {
+            // Template found.
+            set_cached_course_id($defaultshortname, $course->id);
+            return $course->id;
+        }
+
+        return false;
     }
 
     /**

@@ -80,15 +80,12 @@ class backup {
                 'timemodified' => $timestamp
             );
 
-            // Possible race condition when caching is disabled.
-            do {
+            $storedfile = $fs->get_file($filerecord->contextid, $filerecord->component, $filerecord->filearea,
+                $filerecord->itemid, $filerecord->filepath, $filerecord->filename);
+            if(!$storedfile) {
                 $storedfile = $fs->create_file_from_storedfile($filerecord, $file);
-            } while ($storedfile == null && time() - $timestamp <= 60);
-            $file->delete();
-
-            if ($storedfile == null) {
-                return false;
             }
+            $file->delete();
 
             self::set_cached_course($context->id, $storedfile);
         }

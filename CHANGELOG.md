@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 3.9.0 (April 18, 2022)
 
 - [BUGFIX] Fix bug that could cause backup/restore to fail when caching is disabled
 - Drop support for Moodle 3.7-3.8

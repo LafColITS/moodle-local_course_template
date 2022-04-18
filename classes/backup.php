@@ -83,7 +83,7 @@ class backup {
             // Possible race condition when caching is disabled.
             do {
                 $storedfile = $fs->create_file_from_storedfile($filerecord, $file);
-            } while ($storedfile == null && time() - $timestamp <= 5);
+            } while ($storedfile == null && time() - $timestamp <= 60);
             $file->delete();
 
             if ($storedfile == null) {

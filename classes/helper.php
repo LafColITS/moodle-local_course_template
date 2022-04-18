@@ -41,27 +41,35 @@ class helper {
      * @return bool A status indicating success or failure
      */
     public static function template_course($courseid) {
+        mtrace("Finding template for $courseid");
         $templatecourseid = self::find_term_template($courseid);
         if ($templatecourseid == false) {
+            mtrace("No template found for $courseid");
             return false;
         }
 
         // Create and extract template backup file.
+        mtrace("Creating backup for $templatecourseid");
         $backupid = backup::create_backup($templatecourseid);
         if (!$backupid) {
+            mtrace("Failed to create backup for $templatecourseid");
             return false;
         }
 
         // Restore the backup.
+        mtrace("Restoring backup to $courseid");
         $status = backup::restore_backup($backupid, $courseid);
         if (!$status) {
+            mtrace("Failed to restore backup to $courseid");
             return false;
         }
 
         // Cleanup potential news forum duplication.
+        mtrace("Pruning news forums in $courseid");
         self::prune_news_forums($courseid);
 
         // Trigger custom event.
+        mtrace("Triggering event for $courseid");
         $systemcontext = \context_system::instance();
         $event = event\template_copied::create([
             'context' => $systemcontext,
@@ -72,6 +80,7 @@ class helper {
         ]);
         $event->trigger();
 
+        mtrace("Finished with $courseid");
         return true;
     }
 

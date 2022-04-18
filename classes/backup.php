@@ -62,6 +62,7 @@ class backup {
             $bc->set_status(\backup::STATUS_AWAITING);
             $bc->execute_plan();
             $result = $bc->get_results();
+            mtrace(print_r($result, true));
             $bc->destroy();
 
             // Store the backup.

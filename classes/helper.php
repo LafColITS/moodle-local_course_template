@@ -191,7 +191,7 @@ class helper {
 
         $newsforums = $DB->get_records('forum', array('course' => $courseid, 'type' => 'news'),
             'id ASC', 'id');
-        if (!$newsforums || count($newsforums) <= 0) {
+        if (!is_array($newsforums) || count($newsforums) <= 0) {
             return;
         }
         array_shift($newsforums);

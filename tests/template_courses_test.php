@@ -258,8 +258,8 @@ class local_course_template_testcase extends \advanced_testcase {
         );
 
         // Verify that only two new labels have been created; the cached backup
-        // only has one label.
-        $this->assertEquals(4, $DB->count_records('label'));
+        // only has one label. One new label for the template course and one for the new course.
+        $this->assertEquals(2, $DB->count_records('label'));
 
         // Disable caching.
         set_config('enablecaching', 0, 'local_course_template');

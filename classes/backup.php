@@ -80,7 +80,7 @@ class backup {
                 'timemodified' => $timestamp
             );
 
-            $storedfile = $fs->get_file($filerecord['contextid'], $filerecor['component'], $filerecord['filearea'],
+            $storedfile = $fs->get_file($filerecord['contextid'], $filerecord['component'], $filerecord['filearea'],
                 $filerecord['itemid'], $filerecord['filepath'], $filerecord['filename']);
             if (!is_object($storedfile)) {
                 $storedfile = $fs->create_file_from_storedfile($filerecord, $file);

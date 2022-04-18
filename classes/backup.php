@@ -62,7 +62,6 @@ class backup {
             $bc->set_status(\backup::STATUS_AWAITING);
             $bc->execute_plan();
             $result = $bc->get_results();
-            mtrace(print_r($result, true));
             $bc->destroy();
 
             // Store the backup.
@@ -85,11 +84,9 @@ class backup {
             do {
                 $storedfile = $fs->create_file_from_storedfile($filerecord, $file);
             } while ($storedfile == null && time() - $timestamp <= 5);
-            mtrace(print_r($storedfile, true));
             $file->delete();
 
             if ($storedfile == null) {
-                mtrace("Could not create stored file for $courseid");
                 return false;
             }
 

@@ -181,7 +181,7 @@ class helper {
     }
 
     /**
-     * Remove news forums created by the template.
+     * Remove extra news forums created by the template.
      *
      * @param int $courseid the course
      */
@@ -191,7 +191,7 @@ class helper {
 
         $newsforums = $DB->get_records('forum', array('course' => $courseid, 'type' => 'news'),
             'id ASC', 'id');
-        if (count($newsforums) <= 0) {
+        if (!$newsforums || count($newsforums) <= 0) {
             return;
         }
         array_shift($newsforums);

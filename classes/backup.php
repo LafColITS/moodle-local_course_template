@@ -81,6 +81,7 @@ class backup {
                 'timemodified' => $timestamp
             );
             $storedfile = $fs->create_file_from_storedfile($filerecord, $file);
+            mtrace(print_r($storedfile, true));
             $file->delete();
             self::set_cached_course($context->id, $storedfile);
         }

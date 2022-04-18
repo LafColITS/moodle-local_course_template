@@ -50,7 +50,7 @@ class backup {
 
         // Try to find the backup.
         $storedfile = self::get_cached_course($courseid);
-        if ($storedfile === false) {
+        if (!is_object($storedfile)) {
             // Ensure we have a good course.
             \course_integrity_check($courseid, null, null, true);
 

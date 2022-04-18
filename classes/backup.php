@@ -80,9 +80,19 @@ class backup {
                 'timecreated' => $timestamp,
                 'timemodified' => $timestamp
             );
-            $storedfile = $fs->create_file_from_storedfile($filerecord, $file);
+
+            // Possible race condition when caching is disabled.
+            do {
+                $storedfile = $fs->create_file_from_storedfile($filerecord, $file);
+            } while ($storedfile == null && time() - $timestamp <= 5);
             mtrace(print_r($storedfile, true));
             $file->delete();
+
+            if ($storedfile == null) {
+                mtrace("Could not create stored file for $courseid");
+                return false;
+            }
+
             self::set_cached_course($context->id, $storedfile);
         }
 

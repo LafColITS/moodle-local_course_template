@@ -76,7 +76,20 @@ class backup {
                 'timecreated' => $timestamp,
                 'timemodified' => $timestamp
             );
-            $storedfile = $fs->create_file_from_storedfile($filerecord, $file);
+
+            $storedfile = $fs->get_file($filerecord['contextid'], $filerecord['component'], $filerecord['filearea'],
+            $filerecord['itemid'], $filerecord['filepath'], $filerecord['filename']);
+
+            // Delete the existing backup if it exists and caching is disabled.
+            if (is_object($storedfile) && !get_config('local_course_template', 'enablecaching')) {
+                $storedfile->delete();
+                $storedfile = null;
+            }
+
+            if (!is_object($storedfile)) {
+                $storedfile = $fs->create_file_from_storedfile($filerecord, $file);
+            }
+
             $file->delete();
             self::set_cached_course($context->id, $storedfile);
         }

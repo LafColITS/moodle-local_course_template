@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- [BUGFIX] Fix bug that could cause backup/restore to fail when caching is disabled
 - Drop support for Moodle 3.7-3.8
 
 ## 3.7.0 (March 22, 2021)

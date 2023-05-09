@@ -96,7 +96,7 @@ class backup {
 
         // Extract the backup.
         $packer = new \mbz_packer();
-        $storedfile->extract_to_pathname($packer, "$CFG->tempdir/backup/$courseid");
+        $storedfile->extract_to_pathname($packer, make_backup_temp_directory($courseid));
         return $courseid;
     }
 

@@ -47,8 +47,11 @@ class observers {
         $lockkey = "course{$event->objectid}";
         $lock = $lockfactory->get_lock($lockkey, 0);
         if ($lock !== false) {
-            helper::template_course($event->objectid);
-            $lock->release();
+            try {
+                helper::template_course($event->objectid);
+            } finally {
+                $lock->release();
+            }
         }
     }
 }

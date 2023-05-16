@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.9.1 (May 16, 2023)
+
+- [BUGFIX] Fix issue where the plugin failed with non-standard backup paths (thanks @kiklop74)
+
 ## 3.9.0 (April 18, 2022)
 
 - [BUGFIX] Fix bug that could cause backup/restore to fail when caching is disabled

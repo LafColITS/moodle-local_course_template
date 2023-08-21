@@ -33,7 +33,7 @@ defined('MOODLE_INTERNAL') || die();
  * @copyright 2016 Lafayette College ITS
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class local_course_template_testcase extends \advanced_testcase {
+class template_courses_test extends \advanced_testcase {
     /**
      * Find course templates and apply them to new courses.
      */
@@ -56,7 +56,9 @@ class local_course_template_testcase extends \advanced_testcase {
         $tc1 = $this->getDataGenerator()->create_course(
             array(
                 'name' => 'Template Course 1',
-                'shortname' => 'Template-201610'
+                'shortname' => 'Template-201610',
+                'startdate' => '1693227600',
+                'enddate' => '1702303200'
             )
         );
         $activity = $this->getDataGenerator()->create_module('label',
@@ -65,7 +67,9 @@ class local_course_template_testcase extends \advanced_testcase {
         $tc2 = $this->getDataGenerator()->create_course(
             array(
                 'name' => 'Template Course 2',
-                'shortname' => 'Template-201620'
+                'shortname' => 'Template-201620',
+                'startdate' => '1704376800',
+                'enddate' => '1706191200'
             )
         );
         $activity = $this->getDataGenerator()->create_module('assign',
@@ -103,8 +107,14 @@ class local_course_template_testcase extends \advanced_testcase {
             )
         );
 
+        // Course matching 201620 has resources.
         $this->assertEquals(2, $DB->count_records('label'));
         $this->assertEquals(2, $DB->count_records('assign'));
+
+        // Course matching 201620 has own start/end date date.
+        $c2 = get_course($c2->id);
+        $this->assertEquals(date("Y-m-d", time()), date("Y-m-d", $c2->startdate));
+        $this->assertEquals(0, $c2->enddate);
 
         // Check logging.
         $logs = $DB->get_records('logstore_standard_log', array('component' => 'local_course_template'));
@@ -121,13 +131,15 @@ class local_course_template_testcase extends \advanced_testcase {
         // Course matching termcode regex, but not matching a template.
         // There's no default right now, so this should NOT be based on a template.
         $this->assertEquals(0, $DB->count_records('url'));
-        $this->getDataGenerator()->create_course(
+        $c3 = $this->getDataGenerator()->create_course(
             array(
                 'idnumber' => 'XLSB7201630'
             )
         );
         $this->assertEquals(0, $DB->count_records('url'));
         $this->assertEquals(2, $DB->count_records('assign'));
+        $this->assertEquals(date("Y-m-d", time()), date("Y-m-d", $c3->startdate));
+        $this->assertEquals(0, $c3->enddate);
 
         // Check logging.
         $logs = $DB->get_records('logstore_standard_log', array('component' => 'local_course_template'));
@@ -190,8 +202,11 @@ class local_course_template_testcase extends \advanced_testcase {
         $logs = $DB->get_records('logstore_standard_log', array('component' => 'local_course_template'));
         $this->assertEquals(193, count($logs));
 
+        // Enable start and end date copying.
+        set_config('copydates', 1, 'local_course_template');
+
         // Course matching 201610 template.
-        $c3 = $this->getDataGenerator()->create_course(
+        $c4 = $this->getDataGenerator()->create_course(
             array(
                 'idnumber' => 'XLSB7201610'
             )
@@ -199,12 +214,17 @@ class local_course_template_testcase extends \advanced_testcase {
         $this->assertEquals(193, $DB->count_records('label'));
         $this->assertEquals(2, $DB->count_records('assign'));
 
+        // Reload the course.
+        $c4 = get_course($c4->id);
+        $this->assertEquals('2023-08-28', date("Y-m-d", $c4->startdate));
+        $this->assertEquals('2023-12-11', date("Y-m-d", $c4->enddate));
+
         // Check logging.
         $logs = $DB->get_records('logstore_standard_log', array('component' => 'local_course_template'));
         $this->assertEquals(194, count($logs));
         $log = end($logs);
         $other = @unserialize($log->other) ? unserialize($log->other) : json_decode($log->other, true);
-        $this->assertEquals($c3->id, $other['courseid']);
+        $this->assertEquals($c4->id, $other['courseid']);
         $this->assertEquals($tc1->id, $other['templateid']);
     }
 

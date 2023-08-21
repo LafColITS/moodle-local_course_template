@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Allow the template course startdate and enddate to override the new courses's dates.
+
 ## 3.9.1 (May 16, 2023)
 
 - [BUGFIX] Fix issue where the plugin failed with non-standard backup paths (thanks @kiklop74)

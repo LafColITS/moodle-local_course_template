@@ -61,6 +61,9 @@ class helper {
         // Cleanup potential news forum duplication.
         self::prune_news_forums($courseid);
 
+        // Optionally change the course dates.
+        self::set_course_dates($courseid, $templatecourseid);
+
         // Trigger custom event.
         $systemcontext = \context_system::instance();
         $event = event\template_copied::create([
@@ -178,6 +181,35 @@ class helper {
         foreach ($newsforums as $forum) {
             $cm = get_coursemodule_from_instance('forum', $forum->id);
             course_delete_module($cm->id);
+        }
+    }
+
+    /**
+     * Optionally copy startdate and enddate from the template course.
+     *
+     * @param int $targetcourseid the id of the new course
+     * @param int $sourcecourseid the id of the template course
+     */
+    protected static function set_course_dates($targetcourseid, $sourcecourseid) {
+        $copydates = get_config('local_course_template', 'copydates');
+
+        if (empty($copydates) || $copydates == 0) {
+            return;
+        }
+
+        $sourcecourse = get_course($sourcecourseid);
+        if (empty($sourcecourse)) {
+            return;
+        }
+
+        $targetcourse = get_course($targetcourseid);
+        $targetcourse->startdate = $sourcecourse->startdate;
+        $targetcourse->enddate = $sourcecourse->enddate;
+
+        try {
+            update_course($targetcourse);
+        } catch (\moodle_exception $e) {
+            debugging($e->getMessage());
         }
     }
 }

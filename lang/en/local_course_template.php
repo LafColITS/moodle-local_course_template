@@ -27,6 +27,8 @@ defined('MOODLE_INTERNAL') || die();
 $string['cachedef_backups'] = 'Course template backups';
 $string['cachedef_templates'] = 'Course template course ids';
 $string['cleanuptask'] = 'Cleanup course template backups';
+$string['copydates'] = 'Copy start and end dates';
+$string['copydates_desc'] = 'If enabled, the start and end dates of the template course will be copied to the new course.';
 $string['defaulttemplate'] = 'Default template course shortname';
 $string['defaulttemplate_desc'] = 'Shortname of the default course template. Courses which do not match a template will use this one, if it exists.';
 $string['enablecaching'] = 'Enable caching';

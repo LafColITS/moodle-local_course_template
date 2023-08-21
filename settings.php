@@ -46,6 +46,12 @@ if ($hassiteconfig) {
         new lang_string('enablecaching', 'local_course_template'),
         new lang_string('enablecaching_desc', 'local_course_template'),
     1);
+
     $enableconfig->set_updatedcallback('local_course_template_update_cache');
     $settings->add($enableconfig);
+
+    $settings->add(new admin_setting_configcheckbox('local_course_template/copydates',
+        new lang_string('copydates', 'local_course_template'),
+        new lang_string('copydates_desc', 'local_course_template'),
+    0));
 }

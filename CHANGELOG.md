@@ -1,8 +1,8 @@
 # Changelog
 
-## Unreleased
+## 3.9.2 (August 22, 2023)
 
-- Allow the template course startdate and enddate to override the new courses's dates.
+- Allow the template course startdate and enddate to override the new courses's dates. Thanks @bfriesenvcc for the suggestion.
 
 ## 3.9.1 (May 16, 2023)
 

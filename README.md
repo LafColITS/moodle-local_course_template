@@ -59,6 +59,10 @@ When a new course is created the plugin looks for the template course, then crea
 
 Moodle's [course copy](https://docs.moodle.org/39/en/Course_copy) feature (introduced in Moodle 3.9) does not trigger a course created event so copying a course from the interface will *not* trigger this plugin.
 
+### Start and end dates
+
+By default, the new course will retain its existing start and end dates. You may choose to override these with the template course's values by checking "Copy start and end dates" in the plugin settings.
+
 ## Acknowledgements
 
 This plugin was inspired by the course enrollment/templating plugin in use at Wesleyan University. The restoration controller settings are derived from LSU's [Simplified Restore block](https://github.com/lsuits/simple_restore).

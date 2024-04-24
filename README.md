@@ -5,7 +5,7 @@
 This local plugin allows site administrators to create "template" courses in Moodle which will be restored into new courses on course creation. The intended use case is defining common blocks and activities for a given academic term.
 
 ## Requirements
-- Moodle 3.9 (build 2020061500 or later)
+- Moodle 4.1 (build 2022112800 or later)
 
 ## Installation
 Copy the course_template folder into your /local directory and visit your Admin Notification page to complete the installation.

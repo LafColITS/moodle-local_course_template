@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Dropped support for Moodle 3.9-4.0
+- Added support for Moodle 4.4
+
 ## 3.9.2 (August 22, 2023)
 
 - Allow the template course startdate and enddate to override the new courses's dates. Thanks @bfriesenvcc for the suggestion.

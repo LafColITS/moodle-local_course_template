@@ -179,7 +179,8 @@ class backup {
             'grade_histories' => 0,
             'keep_roles_and_enrolments' => 0,
             'keep_groups_and_groupings' => 0,
-            'overwrite_conf' => 0
+            'overwrite_conf' => 0,
+            'questionbank' => 0,
         );
         foreach ($settings as $name => $value) {
             if ($rc->get_plan()->setting_exists($name)) {

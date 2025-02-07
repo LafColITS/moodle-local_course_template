@@ -24,8 +24,6 @@
 
 namespace local_course_template;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Various helper functions for the plugin.
  *
@@ -70,8 +68,8 @@ class helper {
             'context' => $systemcontext,
             'other' => [
                 'courseid' => $courseid,
-                'templateid' => $templatecourseid
-            ]
+                'templateid' => $templatecourseid,
+            ],
         ]);
         $event->trigger();
 
@@ -93,7 +91,7 @@ class helper {
             return false;
         }
 
-        $target = $DB->get_record('course', array('id' => $targetid), '*', MUST_EXIST);
+        $target = $DB->get_record('course', ['id' => $targetid], '*', MUST_EXIST);
         $subject = $target->idnumber;
         preg_match($pattern, $subject, $matches);
         if (!empty($matches) && count($matches) >= 2) {
@@ -103,11 +101,11 @@ class helper {
             // Check if the idnumber is cached.
             $courseid = self::get_cached_course_id($shortname);
             if ($courseid == false) {
-                $course = $DB->get_record('course', array('shortname' => $shortname));
+                $course = $DB->get_record('course', ['shortname' => $shortname]);
                 if (empty($course)) {
                     // No template found.
                     $defaultshortname = get_config('local_course_template', 'defaulttemplate');
-                    $defaultcourse = $DB->get_record('course', array('shortname' => $defaultshortname));
+                    $defaultcourse = $DB->get_record('course', ['shortname' => $defaultshortname]);
                     if (!empty($defaultshortname && !empty($defaultcourse))) {
                         self::set_cached_course_id($defaultshortname, $defaultcourse->id);
                         return $defaultcourse->id;
@@ -172,7 +170,7 @@ class helper {
         global $CFG, $DB;
         require_once($CFG->dirroot . "/mod/forum/lib.php");
 
-        $newsforums = $DB->get_records('forum', array('course' => $courseid, 'type' => 'news'),
+        $newsforums = $DB->get_records('forum', ['course' => $courseid, 'type' => 'news'],
             'id ASC', 'id');
         if (count($newsforums) <= 0) {
             return;

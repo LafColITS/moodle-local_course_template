@@ -24,8 +24,6 @@
 
 namespace local_course_template;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Unit tests covering course template creation.
  *
@@ -33,11 +31,11 @@ defined('MOODLE_INTERNAL') || die();
  * @copyright 2016 Lafayette College ITS
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class template_courses_test extends \advanced_testcase {
+final class template_courses_test extends \advanced_testcase {
     /**
      * Find course templates and apply them to new courses.
      */
-    public function test_course_templating() {
+    public function test_course_templating(): void {
         global $DB;
 
         $this->resetAfterTest(true);
@@ -54,43 +52,43 @@ class template_courses_test extends \advanced_testcase {
 
         // Create the template courses.
         $tc1 = $this->getDataGenerator()->create_course(
-            array(
+            [
                 'name' => 'Template Course 1',
                 'shortname' => 'Template-201610',
                 'startdate' => '1693227600',
-                'enddate' => '1702303200'
-            )
+                'enddate' => '1702303200',
+            ]
         );
         $activity = $this->getDataGenerator()->create_module('label',
-            array('course' => $tc1->id));
+            ['course' => $tc1->id]);
 
         $tc2 = $this->getDataGenerator()->create_course(
-            array(
+            [
                 'name' => 'Template Course 2',
                 'shortname' => 'Template-201620',
                 'startdate' => '1704376800',
-                'enddate' => '1706191200'
-            )
+                'enddate' => '1706191200',
+            ]
         );
         $activity = $this->getDataGenerator()->create_module('assign',
-            array('course' => $tc2->id));
+            ['course' => $tc2->id]);
         $this->getDataGenerator()->create_module('forum',
-            array('course' => $tc2->id, 'type' => 'news'));
+            ['course' => $tc2->id, 'type' => 'news']);
         $this->getDataGenerator()->create_module('forum',
-            array('course' => $tc2->id, 'type' => 'news'));
+            ['course' => $tc2->id, 'type' => 'news']);
 
         // Course matching 201610 template.
         $c1 = $this->getDataGenerator()->create_course(
-            array(
-                'idnumber' => '1000.201610'
-            )
+            [
+                'idnumber' => '1000.201610',
+            ]
         );
 
         $this->assertEquals(2, $DB->count_records('label'));
         $this->assertEquals(1, $DB->count_records('assign'));
 
         // Check logging.
-        $logs = $DB->get_records('logstore_standard_log', array('component' => 'local_course_template'));
+        $logs = $DB->get_records('logstore_standard_log', ['component' => 'local_course_template']);
         $this->assertEquals(1, count($logs));
         $log = $logs[array_keys($logs)[0]];
         $this->assertEquals('copied', $log->action);
@@ -102,9 +100,9 @@ class template_courses_test extends \advanced_testcase {
 
         // Course matching 201620 template.
         $c2 = $this->getDataGenerator()->create_course(
-            array(
-                'idnumber' => '1000.201620'
-            )
+            [
+                'idnumber' => '1000.201620',
+            ]
         );
 
         // Course matching 201620 has resources.
@@ -117,7 +115,7 @@ class template_courses_test extends \advanced_testcase {
         $this->assertEquals(0, $c2->enddate);
 
         // Check logging.
-        $logs = $DB->get_records('logstore_standard_log', array('component' => 'local_course_template'));
+        $logs = $DB->get_records('logstore_standard_log', ['component' => 'local_course_template']);
         $this->assertEquals(2, count($logs));
         $log = end($logs);
         $other = @unserialize($log->other) ? unserialize($log->other) : json_decode($log->other, true);
@@ -125,16 +123,16 @@ class template_courses_test extends \advanced_testcase {
         $this->assertEquals($tc2->id, $other['templateid']);
 
         // Ensure second news forum is deleted.
-        $this->assertEquals(1, $DB->count_records('forum', array('course' => $c2->id)));
-        $this->assertEquals(2, $DB->count_records('course_modules', array('course' => $c2->id)));
+        $this->assertEquals(1, $DB->count_records('forum', ['course' => $c2->id]));
+        $this->assertEquals(2, $DB->count_records('course_modules', ['course' => $c2->id]));
 
         // Course matching termcode regex, but not matching a template.
         // There's no default right now, so this should NOT be based on a template.
         $this->assertEquals(0, $DB->count_records('url'));
         $c3 = $this->getDataGenerator()->create_course(
-            array(
-                'idnumber' => 'XLSB7201630'
-            )
+            [
+                'idnumber' => 'XLSB7201630',
+            ]
         );
         $this->assertEquals(0, $DB->count_records('url'));
         $this->assertEquals(2, $DB->count_records('assign'));
@@ -142,32 +140,32 @@ class template_courses_test extends \advanced_testcase {
         $this->assertEquals(0, $c3->enddate);
 
         // Check logging.
-        $logs = $DB->get_records('logstore_standard_log', array('component' => 'local_course_template'));
+        $logs = $DB->get_records('logstore_standard_log', ['component' => 'local_course_template']);
         $this->assertEquals(2, count($logs));
 
         // Create default template course.
         $tcd = $this->getDataGenerator()->create_course(
-            array(
+            [
                 'name' => 'Default Template Course',
-                'shortname' => 'default-template'
-            )
+                'shortname' => 'default-template',
+            ]
         );
         $activity = $this->getDataGenerator()->create_module('url',
-            array('course' => $tcd->id));
+            ['course' => $tcd->id]);
 
         // Course matching termcode regex, but not matching a template.
         // Now there IS a default template, so this should use it.
         $this->assertEquals(1, $DB->count_records('url'));
         $cd = $this->getDataGenerator()->create_course(
-            array(
-                'idnumber' => 'XLSB7201640'
-            )
+            [
+                'idnumber' => 'XLSB7201640',
+            ]
         );
         $this->assertEquals(2, $DB->count_records('url'));
         $this->assertEquals(2, $DB->count_records('assign'));
 
         // Check logging.
-        $logs = $DB->get_records('logstore_standard_log', array('component' => 'local_course_template'));
+        $logs = $DB->get_records('logstore_standard_log', ['component' => 'local_course_template']);
         $this->assertEquals(3, count($logs));
         $log = end($logs);
         $other = @unserialize($log->other) ? unserialize($log->other) : json_decode($log->other, true);
@@ -182,24 +180,24 @@ class template_courses_test extends \advanced_testcase {
         $this->assertEquals(2, $DB->count_records('assign'));
 
         // Check logging.
-        $logs = $DB->get_records('logstore_standard_log', array('component' => 'local_course_template'));
+        $logs = $DB->get_records('logstore_standard_log', ['component' => 'local_course_template']);
         $this->assertEquals(3, count($logs));
 
         // Bulk course creation.
         $category1 = $this->getDataGenerator()->create_category();
         for ($categoryid = 2; $categoryid <= 20; $categoryid++) {
-            $category = $this->getDataGenerator()->create_category(array('parent' => $category1->id));
+            $category = $this->getDataGenerator()->create_category(['parent' => $category1->id]);
             for ($course = 1; $course <= 10; $course++) {
                 $coursenum = ($categoryid * 10) + $course;
-                $this->getDataGenerator()->create_course(array(
-                    'category' => $category->id, 'idnumber' => str_pad($coursenum, 5, '0', STR_PAD_LEFT). '.201610'));
+                $this->getDataGenerator()->create_course([
+                    'category' => $category->id, 'idnumber' => str_pad($coursenum, 5, '0', STR_PAD_LEFT). '.201610']);
             }
         }
         $this->assertEquals(192, $DB->count_records('label'));
         $this->assertEquals(2, $DB->count_records('assign'));
 
         // Check logging.
-        $logs = $DB->get_records('logstore_standard_log', array('component' => 'local_course_template'));
+        $logs = $DB->get_records('logstore_standard_log', ['component' => 'local_course_template']);
         $this->assertEquals(193, count($logs));
 
         // Enable start and end date copying.
@@ -207,9 +205,9 @@ class template_courses_test extends \advanced_testcase {
 
         // Course matching 201610 template.
         $c4 = $this->getDataGenerator()->create_course(
-            array(
-                'idnumber' => 'XLSB7201610'
-            )
+            [
+                'idnumber' => 'XLSB7201610',
+            ]
         );
         $this->assertEquals(193, $DB->count_records('label'));
         $this->assertEquals(2, $DB->count_records('assign'));
@@ -220,7 +218,7 @@ class template_courses_test extends \advanced_testcase {
         $this->assertEquals('2023-12-11', date("Y-m-d", $c4->enddate));
 
         // Check logging.
-        $logs = $DB->get_records('logstore_standard_log', array('component' => 'local_course_template'));
+        $logs = $DB->get_records('logstore_standard_log', ['component' => 'local_course_template']);
         $this->assertEquals(194, count($logs));
         $log = end($logs);
         $other = @unserialize($log->other) ? unserialize($log->other) : json_decode($log->other, true);
@@ -228,7 +226,7 @@ class template_courses_test extends \advanced_testcase {
         $this->assertEquals($tc1->id, $other['templateid']);
     }
 
-    public function test_course_caching() {
+    public function test_course_caching(): void {
         global $DB;
 
         $this->resetAfterTest(true);
@@ -244,19 +242,19 @@ class template_courses_test extends \advanced_testcase {
 
         // Create the template course.
         $tc1 = $this->getDataGenerator()->create_course(
-            array(
+            [
                 'name' => 'Template Course 1',
-                'shortname' => 'Template-201610'
-            )
+                'shortname' => 'Template-201610',
+            ]
         );
         $label1 = $this->getDataGenerator()->create_module('label',
-            array('course' => $tc1->id));
+            ['course' => $tc1->id]);
 
         // Course matching 201610 template.
         $c1 = $this->getDataGenerator()->create_course(
-            array(
-                'idnumber' => '1000.201610'
-            )
+            [
+                'idnumber' => '1000.201610',
+            ]
         );
 
         // Verify that the id was cached when $c1 was created.
@@ -267,13 +265,13 @@ class template_courses_test extends \advanced_testcase {
         $this->assertEquals(2, $DB->count_records('label'));
 
         $label2 = $this->getDataGenerator()->create_module('label',
-            array('course' => $tc1->id));
+            ['course' => $tc1->id]);
 
         // Course matching 201610 template.
         $c2 = $this->getDataGenerator()->create_course(
-            array(
-                'idnumber' => '1001.201610'
-            )
+            [
+                'idnumber' => '1001.201610',
+            ]
         );
 
         // Verify that only two new labels have been created; the cached backup
@@ -289,9 +287,9 @@ class template_courses_test extends \advanced_testcase {
 
         // Course matching 201610 template.
         $c3 = $this->getDataGenerator()->create_course(
-            array(
-                'idnumber' => '1002.201610'
-            )
+            [
+                'idnumber' => '1002.201610',
+            ]
         );
 
         // Verify that the new course creation has two labels.

@@ -24,8 +24,6 @@
 
 namespace local_course_template;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Caching functions.
  *
@@ -45,7 +43,7 @@ class cache {
         $templatecache = \cache::make('local_course_template', 'templates');
         $templatecache->purge();
 
-        $backups = $DB->get_records('files', array('component' => 'local_course_template', 'filearea' => 'backup'));
+        $backups = $DB->get_records('files', ['component' => 'local_course_template', 'filearea' => 'backup']);
         $fs = get_file_storage();
         foreach ($backups as $record) {
             $file = $fs->get_file(

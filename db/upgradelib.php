@@ -22,8 +22,6 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * This function identifies and removed orphaned forum course modules.
  */
@@ -31,14 +29,14 @@ function local_course_template_cleanup_modules() {
     global $DB;
 
     // Get the forum identifier.
-    $forumid = $DB->get_field('modules', 'id', array('name' => 'forum'));
+    $forumid = $DB->get_field('modules', 'id', ['name' => 'forum']);
     if (!$forumid) {
         return true;
     }
 
     // Find all the broken modules.
     $orphans = $DB->get_records_sql('SELECT * FROM {course_modules} cm WHERE
-        cm.instance NOT IN (SELECT id FROM {forum} f) AND cm.module=?', array($forumid));
+        cm.instance NOT IN (SELECT id FROM {forum} f) AND cm.module=?', [$forumid]);
     if (empty($orphans)) {
         return true;
     }
@@ -48,7 +46,7 @@ function local_course_template_cleanup_modules() {
         context_helper::delete_instance(CONTEXT_MODULE, $orphan->id);
 
         // Delete the module from the course_modules table.
-        $DB->delete_records('course_modules', array('id' => $orphan->id));
+        $DB->delete_records('course_modules', ['id' => $orphan->id]);
 
         // Delete module from that section.
         delete_mod_from_section($orphan->id, $orphan->section);

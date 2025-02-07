@@ -24,8 +24,6 @@
 
 namespace local_course_template\event;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Custom event class to record a template course being copied/used.
  *
@@ -39,7 +37,7 @@ class template_copied extends \core\event\base {
      *
      * @return string
      */
-    public function get_description() : string {
+    public function get_description(): string {
         $templateid = $this->data['other']['templateid'];
         $courseid = $this->data['other']['courseid'];
         return get_string(
@@ -54,7 +52,7 @@ class template_copied extends \core\event\base {
      *
      * @return string
      */
-    public static function get_name() : string {
+    public static function get_name(): string {
         return get_string('event:template_copied:name', 'local_course_template');
     }
 

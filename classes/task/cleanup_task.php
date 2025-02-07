@@ -24,8 +24,6 @@
 
 namespace local_course_template\task;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Scheduled task to purge old template backups.
  *

@@ -22,10 +22,14 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+namespace local_course_template;
+
 defined('MOODLE_INTERNAL') || die();
 
 global $CFG;
 require_once($CFG->dirroot . '/local/course_template/db/upgradelib.php');
+
+use advanced_testcase;
 
 /**
  * Unit tests covering course module cleanup on upgrade.
@@ -33,12 +37,13 @@ require_once($CFG->dirroot . '/local/course_template/db/upgradelib.php');
  * @package local_course_template
  * @copyright 2016 Lafayette College ITS
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @covers \local_course_template_cleanup_modules()
  */
-class local_course_template_upgradelib_test extends advanced_testcase {
+final class upgradelib_test extends advanced_testcase {
     /**
      * Test that vestigial news forum course modules are cleaned up.
      */
-    public function test_upgradelib() {
+    public function test_upgradelib(): void {
         global $DB;
         $this->resetAfterTest(true);
 
@@ -49,19 +54,19 @@ class local_course_template_upgradelib_test extends advanced_testcase {
 
         // Add a news forum to each.
         $this->getDataGenerator()->create_module('forum',
-            array('course' => $c1->id, 'type' => 'news'));
+            ['course' => $c1->id, 'type' => 'news']);
         $f2 = $this->getDataGenerator()->create_module('forum',
-            array('course' => $c2->id, 'type' => 'news'));
+            ['course' => $c2->id, 'type' => 'news']);
         $f3 = $this->getDataGenerator()->create_module('forum',
-            array('course' => $c2->id, 'type' => 'news'));
+            ['course' => $c2->id, 'type' => 'news']);
 
         // Add a normal forum to each.
         $this->getDataGenerator()->create_module('forum',
-            array('course' => $c1->id));
+            ['course' => $c1->id]);
         $this->getDataGenerator()->create_module('forum',
-            array('course' => $c2->id));
+            ['course' => $c2->id]);
         $this->getDataGenerator()->create_module('forum',
-            array('course' => $c2->id));
+            ['course' => $c2->id]);
 
         // Sanity check.
         $this->assertEquals(6, $DB->count_records('forum'));

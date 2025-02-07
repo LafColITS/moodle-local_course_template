@@ -24,8 +24,6 @@
 
 namespace local_course_template\privacy;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Privacy functions for the plugin.
  *
@@ -43,7 +41,7 @@ class provider implements
      *
      * @return  string
      */
-    public static function get_reason() : string {
+    public static function get_reason(): string {
         return 'privacy:metadata';
     }
 }

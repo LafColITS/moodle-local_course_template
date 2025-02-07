@@ -24,9 +24,9 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$observers = array(
-    array(
+$observers = [
+    [
         'eventname' => '\core\event\course_created',
         'callback'  => '\local_course_template\observers::course_created',
-    ),
-);
+    ],
+];

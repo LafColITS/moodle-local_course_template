@@ -66,7 +66,7 @@ class backup {
             $context = \context_course::instance($courseid);
             $timestamp = time();
             $fs = get_file_storage();
-            $filerecord = array(
+            $filerecord = [
                 'contextid' => $context->id,
                 'component' => 'local_course_template',
                 'filearea' => 'backup',
@@ -74,8 +74,8 @@ class backup {
                 'filepath' => '/',
                 'filename' => 'template_backup.mbz',
                 'timecreated' => $timestamp,
-                'timemodified' => $timestamp
-            );
+                'timemodified' => $timestamp,
+            ];
 
             $storedfile = $fs->get_file($filerecord['contextid'], $filerecord['component'], $filerecord['filearea'],
             $filerecord['itemid'], $filerecord['filepath'], $filerecord['filename']);
@@ -165,7 +165,7 @@ class backup {
      * @param restore_controller $rc The restore controller
      */
     protected static function apply_defaults($rc) {
-        $settings = array(
+        $settings = [
             'enrol_migratetomanual' => 0,
             'users' => 0,
             'user_files' => 0,
@@ -179,8 +179,8 @@ class backup {
             'grade_histories' => 0,
             'keep_roles_and_enrolments' => 0,
             'keep_groups_and_groupings' => 0,
-            'overwrite_conf' => 0
-        );
+            'overwrite_conf' => 0,
+        ];
         foreach ($settings as $name => $value) {
             if ($rc->get_plan()->setting_exists($name)) {
                 $setting = $rc->get_plan()->get_setting($name);

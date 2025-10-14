@@ -53,20 +53,32 @@ final class upgradelib_test extends advanced_testcase {
         $this->getDataGenerator()->create_course();
 
         // Add a news forum to each.
-        $this->getDataGenerator()->create_module('forum',
-            ['course' => $c1->id, 'type' => 'news']);
-        $f2 = $this->getDataGenerator()->create_module('forum',
-            ['course' => $c2->id, 'type' => 'news']);
-        $f3 = $this->getDataGenerator()->create_module('forum',
-            ['course' => $c2->id, 'type' => 'news']);
+        $this->getDataGenerator()->create_module(
+            'forum',
+            ['course' => $c1->id, 'type' => 'news']
+        );
+        $f2 = $this->getDataGenerator()->create_module(
+            'forum',
+            ['course' => $c2->id, 'type' => 'news']
+        );
+        $f3 = $this->getDataGenerator()->create_module(
+            'forum',
+            ['course' => $c2->id, 'type' => 'news']
+        );
 
         // Add a normal forum to each.
-        $this->getDataGenerator()->create_module('forum',
-            ['course' => $c1->id]);
-        $this->getDataGenerator()->create_module('forum',
-            ['course' => $c2->id]);
-        $this->getDataGenerator()->create_module('forum',
-            ['course' => $c2->id]);
+        $this->getDataGenerator()->create_module(
+            'forum',
+            ['course' => $c1->id]
+        );
+        $this->getDataGenerator()->create_module(
+            'forum',
+            ['course' => $c2->id]
+        );
+        $this->getDataGenerator()->create_module(
+            'forum',
+            ['course' => $c2->id]
+        );
 
         // Sanity check.
         $this->assertEquals(6, $DB->count_records('forum'));

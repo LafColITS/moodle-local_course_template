@@ -3,7 +3,8 @@
 ## Unreleased
 
 - Dropped support for Moodle 3.9-4.0
-- Added support for Moodle 4.4
+- Added support for Moodle 4.4-5.1
+- Code cleanup
 
 ## 3.9.2 (August 22, 2023)
 

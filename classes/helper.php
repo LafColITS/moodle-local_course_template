@@ -95,8 +95,11 @@ class helper {
         $subject = $target->idnumber;
         preg_match($pattern, $subject, $matches);
         if (!empty($matches) && count($matches) >= 2) {
-            $shortname = str_replace('[TERMCODE]', $matches[1],
-                get_config('local_course_template', 'templatenameformat'));
+            $shortname = str_replace(
+                '[TERMCODE]',
+                $matches[1],
+                get_config('local_course_template', 'templatenameformat')
+            );
 
             // Check if the idnumber is cached.
             $courseid = self::get_cached_course_id($shortname);
@@ -170,8 +173,12 @@ class helper {
         global $CFG, $DB;
         require_once($CFG->dirroot . "/mod/forum/lib.php");
 
-        $newsforums = $DB->get_records('forum', ['course' => $courseid, 'type' => 'news'],
-            'id ASC', 'id');
+        $newsforums = $DB->get_records(
+            'forum',
+            ['course' => $courseid, 'type' => 'news'],
+            'id ASC',
+            'id'
+        );
         if (count($newsforums) <= 0) {
             return;
         }

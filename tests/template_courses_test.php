@@ -59,8 +59,10 @@ final class template_courses_test extends \advanced_testcase {
                 'enddate' => '1702303200',
             ]
         );
-        $activity = $this->getDataGenerator()->create_module('label',
-            ['course' => $tc1->id]);
+        $activity = $this->getDataGenerator()->create_module(
+            'label',
+            ['course' => $tc1->id]
+        );
 
         $tc2 = $this->getDataGenerator()->create_course(
             [
@@ -70,12 +72,18 @@ final class template_courses_test extends \advanced_testcase {
                 'enddate' => '1706191200',
             ]
         );
-        $activity = $this->getDataGenerator()->create_module('assign',
-            ['course' => $tc2->id]);
-        $this->getDataGenerator()->create_module('forum',
-            ['course' => $tc2->id, 'type' => 'news']);
-        $this->getDataGenerator()->create_module('forum',
-            ['course' => $tc2->id, 'type' => 'news']);
+        $activity = $this->getDataGenerator()->create_module(
+            'assign',
+            ['course' => $tc2->id]
+        );
+        $this->getDataGenerator()->create_module(
+            'forum',
+            ['course' => $tc2->id, 'type' => 'news']
+        );
+        $this->getDataGenerator()->create_module(
+            'forum',
+            ['course' => $tc2->id, 'type' => 'news']
+        );
 
         // Course matching 201610 template.
         $c1 = $this->getDataGenerator()->create_course(
@@ -150,8 +158,10 @@ final class template_courses_test extends \advanced_testcase {
                 'shortname' => 'default-template',
             ]
         );
-        $activity = $this->getDataGenerator()->create_module('url',
-            ['course' => $tcd->id]);
+        $activity = $this->getDataGenerator()->create_module(
+            'url',
+            ['course' => $tcd->id]
+        );
 
         // Course matching termcode regex, but not matching a template.
         // Now there IS a default template, so this should use it.
@@ -190,7 +200,7 @@ final class template_courses_test extends \advanced_testcase {
             for ($course = 1; $course <= 10; $course++) {
                 $coursenum = ($categoryid * 10) + $course;
                 $this->getDataGenerator()->create_course([
-                    'category' => $category->id, 'idnumber' => str_pad($coursenum, 5, '0', STR_PAD_LEFT). '.201610']);
+                    'category' => $category->id, 'idnumber' => str_pad($coursenum, 5, '0', STR_PAD_LEFT) . '.201610']);
             }
         }
         $this->assertEquals(192, $DB->count_records('label'));
@@ -247,8 +257,10 @@ final class template_courses_test extends \advanced_testcase {
                 'shortname' => 'Template-201610',
             ]
         );
-        $label1 = $this->getDataGenerator()->create_module('label',
-            ['course' => $tc1->id]);
+        $label1 = $this->getDataGenerator()->create_module(
+            'label',
+            ['course' => $tc1->id]
+        );
 
         // Course matching 201610 template.
         $c1 = $this->getDataGenerator()->create_course(
@@ -264,8 +276,10 @@ final class template_courses_test extends \advanced_testcase {
         $this->assertInstanceOf('stored_file', $coursebackup);
         $this->assertEquals(2, $DB->count_records('label'));
 
-        $label2 = $this->getDataGenerator()->create_module('label',
-            ['course' => $tc1->id]);
+        $label2 = $this->getDataGenerator()->create_module(
+            'label',
+            ['course' => $tc1->id]
+        );
 
         // Course matching 201610 template.
         $c2 = $this->getDataGenerator()->create_course(

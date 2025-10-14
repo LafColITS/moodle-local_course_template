@@ -31,7 +31,6 @@ namespace local_course_template\event;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class template_copied extends \core\event\base {
-
     /**
      * Returns description of what happened.
      *

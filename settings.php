@@ -30,28 +30,44 @@ if ($hassiteconfig) {
     $settings = new admin_settingpage('local_course_template', get_string('pluginname', 'local_course_template'));
     $ADMIN->add('localplugins', $settings);
 
-    $settings->add(new admin_setting_configtext('local_course_template/extracttermcode',
+    $settings->add(new admin_setting_configtext(
+        'local_course_template/extracttermcode',
         new lang_string('extracttermcode', 'local_course_template'),
-        new lang_string('extracttermcode_desc', 'local_course_template'), '', PARAM_NOTAGS));
+        new lang_string('extracttermcode_desc', 'local_course_template'),
+        '',
+        PARAM_NOTAGS
+    ));
 
-    $settings->add(new admin_setting_configtext('local_course_template/templatenameformat',
+    $settings->add(new admin_setting_configtext(
+        'local_course_template/templatenameformat',
         new lang_string('templatenameformat', 'local_course_template'),
-        new lang_string('templatenameformat_desc', 'local_course_template'), 'Template-[TERMCODE]', PARAM_NOTAGS));
+        new lang_string('templatenameformat_desc', 'local_course_template'),
+        'Template-[TERMCODE]',
+        PARAM_NOTAGS
+    ));
 
-    $settings->add(new admin_setting_configtext('local_course_template/defaulttemplate',
+    $settings->add(new admin_setting_configtext(
+        'local_course_template/defaulttemplate',
         get_string('defaulttemplate', 'local_course_template'),
-        get_string('defaulttemplate_desc', 'local_course_template'), '', PARAM_NOTAGS));
+        get_string('defaulttemplate_desc', 'local_course_template'),
+        '',
+        PARAM_NOTAGS
+    ));
 
-    $enableconfig = new admin_setting_configcheckbox('local_course_template/enablecaching',
+    $enableconfig = new admin_setting_configcheckbox(
+        'local_course_template/enablecaching',
         new lang_string('enablecaching', 'local_course_template'),
         new lang_string('enablecaching_desc', 'local_course_template'),
-    1);
+        1
+    );
 
     $enableconfig->set_updatedcallback('local_course_template_update_cache');
     $settings->add($enableconfig);
 
-    $settings->add(new admin_setting_configcheckbox('local_course_template/copydates',
+    $settings->add(new admin_setting_configcheckbox(
+        'local_course_template/copydates',
         new lang_string('copydates', 'local_course_template'),
         new lang_string('copydates_desc', 'local_course_template'),
-    0));
+        0
+    ));
 }

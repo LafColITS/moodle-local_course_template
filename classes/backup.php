@@ -50,10 +50,15 @@ class backup {
         // Try to find the backup.
         $storedfile = self::get_cached_course($courseid);
         if ($storedfile === false) {
-
             // Instantiate controller.
             $bc = new \backup_controller(
-                \backup::TYPE_1COURSE, $courseid, \backup::FORMAT_MOODLE, \backup::INTERACTIVE_NO, \backup::MODE_GENERAL, get_admin()->id);
+                \backup::TYPE_1COURSE,
+                $courseid,
+                \backup::FORMAT_MOODLE,
+                \backup::INTERACTIVE_NO,
+                \backup::MODE_GENERAL,
+                get_admin()->id
+            );
 
             // Run the backup.
             $bc->set_status(\backup::STATUS_AWAITING);
@@ -77,8 +82,14 @@ class backup {
                 'timemodified' => $timestamp,
             ];
 
-            $storedfile = $fs->get_file($filerecord['contextid'], $filerecord['component'], $filerecord['filearea'],
-            $filerecord['itemid'], $filerecord['filepath'], $filerecord['filename']);
+            $storedfile = $fs->get_file(
+                $filerecord['contextid'],
+                $filerecord['component'],
+                $filerecord['filearea'],
+                $filerecord['itemid'],
+                $filerecord['filepath'],
+                $filerecord['filename']
+            );
 
             // Delete the existing backup if it exists and caching is disabled.
             if (is_object($storedfile) && !get_config('local_course_template', 'enablecaching')) {
@@ -148,7 +159,13 @@ class backup {
     public static function restore_backup($templateid, $courseid) {
         $admin = get_admin();
         $rc = new \restore_controller(
-            $templateid, $courseid, \backup::INTERACTIVE_NO, \backup::MODE_SAMESITE, $admin->id, \backup::TARGET_EXISTING_ADDING);
+            $templateid,
+            $courseid,
+            \backup::INTERACTIVE_NO,
+            \backup::MODE_SAMESITE,
+            $admin->id,
+            \backup::TARGET_EXISTING_ADDING
+        );
         self::apply_defaults($rc);
         if (!$rc->execute_precheck(true)) {
             return false;

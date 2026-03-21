@@ -24,6 +24,8 @@
 
 namespace local_course_template;
 
+defined('MOODLE_INTERNAL') || die();
+
 /**
  * Various helper functions for the plugin.
  *
@@ -109,7 +111,7 @@ class helper {
                     // No template found.
                     $defaultshortname = get_config('local_course_template', 'defaulttemplate');
                     $defaultcourse = $DB->get_record('course', ['shortname' => $defaultshortname]);
-                    if (!empty($defaultshortname && !empty($defaultcourse))) {
+                    if (!empty($defaultshortname) && !empty($defaultcourse)) {
                         self::set_cached_course_id($defaultshortname, $defaultcourse->id);
                         return $defaultcourse->id;
                     }
@@ -172,6 +174,7 @@ class helper {
     protected static function prune_news_forums($courseid) {
         global $CFG, $DB;
         require_once($CFG->dirroot . "/mod/forum/lib.php");
+        require_once($CFG->dirroot . "/course/lib.php");
 
         $newsforums = $DB->get_records(
             'forum',
@@ -185,7 +188,9 @@ class helper {
         array_shift($newsforums);
         foreach ($newsforums as $forum) {
             $cm = get_coursemodule_from_instance('forum', $forum->id);
-            course_delete_module($cm->id);
+            if ($cm) {
+                course_delete_module($cm->id);
+            }
         }
     }
 

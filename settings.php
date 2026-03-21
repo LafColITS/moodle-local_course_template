@@ -34,7 +34,7 @@ if ($hassiteconfig) {
         'local_course_template/extracttermcode',
         new lang_string('extracttermcode', 'local_course_template'),
         new lang_string('extracttermcode_desc', 'local_course_template'),
-        '',
+        '/^([^.]+)/',
         PARAM_NOTAGS
     ));
 

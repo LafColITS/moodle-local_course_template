@@ -42,12 +42,6 @@ function xmldb_local_course_template_upgrade($oldversion) {
     }
 
     if ($oldversion < 2026031702) {
-        // Set the extracttermcode regex if not already configured.
-        // Extracts the course code before the dot from idnumber (e.g. "CMTY104" from "CMTY104.128805").
-        $current = get_config('local_course_template', 'extracttermcode');
-        if (empty($current)) {
-            set_config('extracttermcode', '/^([^.]+)/', 'local_course_template');
-        }
         upgrade_plugin_savepoint(true, 2026031702, 'local', 'course_template');
     }
 

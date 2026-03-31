@@ -24,6 +24,8 @@
 
 namespace local_course_template;
 
+defined('MOODLE_INTERNAL') || die();
+
 /**
  * Various helper functions for the plugin.
  *
@@ -85,46 +87,46 @@ class helper {
     protected static function find_term_template($targetid) {
         global $DB;
 
-        // Don't continue if there's no pattern.
         $pattern = get_config('local_course_template', 'extracttermcode');
-        if (empty($pattern)) {
-            return false;
-        }
 
-        $target = $DB->get_record('course', ['id' => $targetid], '*', MUST_EXIST);
-        $subject = $target->idnumber;
-        preg_match($pattern, $subject, $matches);
-        if (!empty($matches) && count($matches) >= 2) {
-            $shortname = str_replace(
-                '[TERMCODE]',
-                $matches[1],
-                get_config('local_course_template', 'templatenameformat')
-            );
+        // Try term-based template matching if a pattern is configured.
+        if (!empty($pattern)) {
+            $target = $DB->get_record('course', ['id' => $targetid], '*', MUST_EXIST);
+            $subject = $target->idnumber;
+            $matches = [];
+            @preg_match($pattern, $subject, $matches);
+            if (!empty($matches) && count($matches) >= 2) {
+                $shortname = str_replace(
+                    '[TERMCODE]',
+                    $matches[1],
+                    get_config('local_course_template', 'templatenameformat')
+                );
 
-            // Check if the idnumber is cached.
-            $courseid = self::get_cached_course_id($shortname);
-            if ($courseid == false) {
-                $course = $DB->get_record('course', ['shortname' => $shortname]);
-                if (empty($course)) {
-                    // No template found.
-                    $defaultshortname = get_config('local_course_template', 'defaulttemplate');
-                    $defaultcourse = $DB->get_record('course', ['shortname' => $defaultshortname]);
-                    if (!empty($defaultshortname && !empty($defaultcourse))) {
-                        self::set_cached_course_id($defaultshortname, $defaultcourse->id);
-                        return $defaultcourse->id;
+                // Check if the idnumber is cached.
+                $courseid = self::get_cached_course_id($shortname);
+                if ($courseid == false) {
+                    $course = $DB->get_record('course', ['shortname' => $shortname]);
+                    if (!empty($course)) {
+                        self::set_cached_course_id($shortname, $course->id);
+                        return $course->id;
                     }
-                    return false;
                 } else {
-                    self::set_cached_course_id($shortname, $course->id);
-                    return $course->id;
+                    return $courseid;
                 }
-            } else {
-                return $courseid;
             }
-        } else {
-            // This course doesn't conform to the given naming convention, so skip.
-            return false;
         }
+
+        // Fall back to default template.
+        $defaultshortname = get_config('local_course_template', 'defaulttemplate');
+        if (!empty($defaultshortname)) {
+            $defaultcourse = $DB->get_record('course', ['shortname' => $defaultshortname]);
+            if (!empty($defaultcourse)) {
+                self::set_cached_course_id($defaultshortname, $defaultcourse->id);
+                return $defaultcourse->id;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -172,6 +174,7 @@ class helper {
     protected static function prune_news_forums($courseid) {
         global $CFG, $DB;
         require_once($CFG->dirroot . "/mod/forum/lib.php");
+        require_once($CFG->dirroot . "/course/lib.php");
 
         $newsforums = $DB->get_records(
             'forum',
@@ -185,7 +188,9 @@ class helper {
         array_shift($newsforums);
         foreach ($newsforums as $forum) {
             $cm = get_coursemodule_from_instance('forum', $forum->id);
-            course_delete_module($cm->id);
+            if ($cm) {
+                course_delete_module($cm->id);
+            }
         }
     }
 

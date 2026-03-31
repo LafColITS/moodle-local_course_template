@@ -24,6 +24,8 @@
 
 namespace local_course_template;
 
+defined('MOODLE_INTERNAL') || die();
+
 /**
  * Caching functions.
  *

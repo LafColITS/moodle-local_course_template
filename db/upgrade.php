@@ -22,6 +22,8 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+defined('MOODLE_INTERNAL') || die();
+
 /**
  * Upgrade function for plugin.
  *
@@ -37,6 +39,10 @@ function xmldb_local_course_template_upgrade($oldversion) {
         // Remediate bug where forums were deleted but the course modules weren't.
         local_course_template_cleanup_modules();
         upgrade_plugin_savepoint(true, 2017082400, 'local', 'course_template');
+    }
+
+    if ($oldversion < 2026031702) {
+        upgrade_plugin_savepoint(true, 2026031702, 'local', 'course_template');
     }
 
     return true;

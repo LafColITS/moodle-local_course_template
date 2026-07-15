@@ -1,0 +1,12 @@
+{
+    "name": "lafayettecollege/moodle-local_course_template",
+    "description": "This local plugin allows site administrators to create \"templat\" courses in Moodle which will be restored into new courses on course creation.",
+    "type": "moodle-local",
+    "require": {
+        "composer/installers": "*"
+    },
+    "license": "GPL-3.0-or-later",
+    "extra": {
+        "installer-name": "course_template"
+    }
+}

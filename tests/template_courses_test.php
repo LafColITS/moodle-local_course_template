@@ -27,7 +27,9 @@ namespace local_course_template;
 /**
  * Unit tests covering course template creation.
  *
- * @package local_course_template
+ * @package   local_course_template
+ * @covers    \local_course_template\observers
+ * @covers    \local_course_template\helper
  * @copyright 2016 Lafayette College ITS
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
